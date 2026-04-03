@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rádio VaneKonex | Streaming Premium</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-tower-broadcast neon-icon pulse-anim"></i>
+            <h1>Vane<span>Konex</span> Rádio</h1>
+        </div>
+        <div class="social-icons">
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="#"><i class="fa-solid fa-globe"></i></a>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section id="player-section" class="glass-panel">
+            <div class="now-playing-badge">AO VIVO</div>
+            
+            <div class="vinyl-container">
+                <div class="vinyl" id="vinyl-record">
+                    <div class="vinyl-center">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="track-info">
+                <div class="equalizer" id="equalizer">
+                    <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                </div>
+                <h2 id="nome-musica" class="marquee">Aguardando servidor...</h2>
+                <h3 id="nome-cantor">Sintonizando</h3>
+            </div>
+
+            <div class="progress-container">
+                <span id="tempo-atual">00:00</span>
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <span id="tempo-total">00:00</span>
+            </div>
+
+            <div class="controls">
+                <button id="btn-play-pause" onclick="togglePlay()">
+                    <i class="fa-solid fa-play" id="icon-play"></i>
+                </button>
+            </div>
+            
+            <audio id="audio-player"></audio>
+        </section>
+
+        <aside class="sidebar">
+            <section class="glass-panel up-next">
+                <h3><i class="fa-solid fa-list-ul"></i> A Seguir na Programação</h3>
+                <ul id="lista-proximas">
+                    <li>Carregando playlist...</li>
+                </ul>
+            </section>
+
+            <section class="glass-panel news-mini">
+                <h3><i class="fa-solid fa-fire"></i> Destaques</h3>
+                <p>Baixe nosso novo aplicativo em breve e ouça a VaneKonex em qualquer lugar, com qualidade digital HD.</p>
+            </section>
+        </aside>
+    </main>
+
+    <section id="parceiros">
+        <div class="sponsor-marquee">
+            <div class="sponsor-track">
+                <div class="sponsor"><i class="fa-solid fa-handshake"></i> AudioBeat Equipamentos</div>
+                <div class="sponsor"><i class="fa-solid fa-handshake"></i> NetFast Internet</div>
+                <div class="sponsor"><i class="fa-solid fa-handshake"></i> Studio Design Digital</div>
+                <div class="sponsor"><i class="fa-solid fa-handshake"></i> CyberHost Web</div>
+                <div class="sponsor"><i class="fa-solid fa-handshake"></i> Tech Nova Soluções</div>
+                
+                <div class="sponsor"><i class="fa-solid fa-handshake"></i> AudioBeat Equipamentos</div>
+                <div class="sponsor"><i class="fa-solid fa-handshake"></i> NetFast Internet</div>
+                <div class="sponsor"><i class="fa-solid fa-handshake"></i> Studio Design Digital</div>
+                <div class="sponsor"><i class="fa-solid fa-handshake"></i> CyberHost Web</div>
+                <div class="sponsor"><i class="fa-solid fa-handshake"></i> Tech Nova Soluções</div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
