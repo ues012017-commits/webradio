@@ -757,6 +757,17 @@ function applySiteConfig(cfg) {
         } catch(e) { return false; }
     }
 
+    function sanitizeUrl(url) {
+        if (!url || url === '#') return '#';
+        try {
+            const parsed = new URL(url, window.location.origin);
+            if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
+                return parsed.href;
+            }
+        } catch(e) { /* invalid URL */ }
+        return '#';
+    }
+
     // Contact info
     const contatoItems = document.querySelectorAll('.contato-item');
     if (contatoItems.length >= 4) {
@@ -777,8 +788,7 @@ function applySiteConfig(cfg) {
     ];
     headerSocials.forEach((a, i) => {
         if (socialMap[i] && cfg[socialMap[i].key]) {
-            const url = cfg[socialMap[i].key];
-            if (isSafeUrl(url)) a.href = url;
+            a.href = sanitizeUrl(cfg[socialMap[i].key]);
         }
     });
 
@@ -787,8 +797,7 @@ function applySiteConfig(cfg) {
     const contatoSocialMap = ['instagram', 'facebook', 'youtube', 'twitter', 'tiktok'];
     contatoSocials.forEach((a, i) => {
         if (contatoSocialMap[i] && cfg[contatoSocialMap[i]]) {
-            const url = cfg[contatoSocialMap[i]];
-            if (isSafeUrl(url)) a.href = url;
+            a.href = sanitizeUrl(cfg[contatoSocialMap[i]]);
         }
     });
 
@@ -796,7 +805,10 @@ function applySiteConfig(cfg) {
     const locutoraName = document.getElementById('locutora-name');
     const locutoraPhoto = document.getElementById('locutora-photo');
     if (locutoraName && cfg.locutora_nome) locutoraName.textContent = cfg.locutora_nome;
-    if (locutoraPhoto && cfg.locutora_foto && isSafeUrl(cfg.locutora_foto)) locutoraPhoto.src = cfg.locutora_foto;
+    if (locutoraPhoto && cfg.locutora_foto) {
+        const photoUrl = sanitizeUrl(cfg.locutora_foto);
+        if (photoUrl !== '#') locutoraPhoto.src = photoUrl;
+    }
 
     const locutoraSocials = {
         'locutora-instagram': cfg.locutora_instagram,
@@ -807,8 +819,7 @@ function applySiteConfig(cfg) {
     document.querySelectorAll('.locutora-social-link').forEach(a => {
         const key = a.getAttribute('data-social');
         if (key && locutoraSocials[key]) {
-            const url = locutoraSocials[key];
-            if (isSafeUrl(url)) a.href = url;
+            a.href = sanitizeUrl(locutoraSocials[key]);
         }
     });
 
@@ -829,7 +840,8 @@ let vdjCheckTimer = null;
 
 function initVirtualDJCheck() {
     checkVDJStream();
-    const interval = parseInt(localStorage.getItem('vdj_check_interval')) || VDJ_DEFAULT_INTERVAL;
+    let interval = parseInt(localStorage.getItem('vdj_check_interval')) || VDJ_DEFAULT_INTERVAL;
+    interval = Math.max(10, Math.min(300, interval));
     vdjCheckTimer = setInterval(checkVDJStream, interval * 1000);
 }
 
@@ -845,9 +857,21 @@ function checkVDJStream() {
         return;
     }
 
+    // Validate stream URL before fetching
+    try {
+        const parsed = new URL(streamUrl);
+        if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+            setVDJOffline(vdjDot, vdjText, liveText, liveIndicator);
+            return;
+        }
+    } catch(e) {
+        setVDJOffline(vdjDot, vdjText, liveText, liveIndicator);
+        return;
+    }
+
     fetch(streamUrl, { method: 'HEAD', cache: 'no-store' })
         .then(response => {
-            if (response.ok || response.type === 'opaque') {
+            if (response.ok) {
                 if (vdjDot) { vdjDot.classList.add('live'); }
                 if (vdjText) { vdjText.classList.add('live'); vdjText.textContent = 'AO VIVO'; }
                 if (liveText) { liveText.textContent = 'AO VIVO'; }
@@ -855,6 +879,8 @@ function checkVDJStream() {
                     const dot = liveIndicator.querySelector('.live-dot');
                     if (dot) dot.style.background = '#2ecc71';
                 }
+                const locutoraBadge = document.getElementById('locutora-badge');
+                if (locutoraBadge) locutoraBadge.style.display = 'inline-block';
             } else {
                 setVDJOffline(vdjDot, vdjText, liveText, liveIndicator);
             }
@@ -872,4 +898,6 @@ function setVDJOffline(dot, text, liveText, liveIndicator) {
         const liveDot = liveIndicator.querySelector('.live-dot');
         if (liveDot) liveDot.style.background = '';
     }
+    const locutoraBadge = document.getElementById('locutora-badge');
+    if (locutoraBadge) locutoraBadge.style.display = 'none';
 }

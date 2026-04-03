@@ -16,6 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 $configFile = __DIR__ . '/config.json';
 $passwordHash = 'f38fcb4e32e6286fa6f924223e3ed4fe250cbf2c2d30023691f0867710b5cfbb';
+$MIN_CHECK_INTERVAL = 10;
+$MAX_CHECK_INTERVAL = 300;
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (file_exists($configFile)) {
@@ -80,14 +82,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ];
                 }, $body[$key]);
             } elseif ($key === 'vdj_check_interval') {
-                $filtered[$key] = max(10, min(300, intval($body[$key])));
+                $filtered[$key] = max($MIN_CHECK_INTERVAL, min($MAX_CHECK_INTERVAL, intval($body[$key])));
             } else {
                 $filtered[$key] = (string)$body[$key];
             }
         }
     }
 
-    $result = file_put_contents($configFile, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    $result = file_put_contents($configFile, json_encode($filtered, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
     if ($result === false) {
         http_response_code(500);
         echo json_encode(['error' => 'Erro ao salvar configuração']);
