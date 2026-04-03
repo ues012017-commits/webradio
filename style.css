@@ -98,7 +98,7 @@ header {
     position: sticky;
     top: 0;
     z-index: 1000;
-    transition: all 0.3s;
+    transition: padding 0.3s, background 0.3s;
 }
 header.scrolled {
     padding: 10px 5%;
@@ -979,7 +979,7 @@ footer {
     border-radius: 50%;
     pointer-events: none;
     z-index: 9999;
-    transform: translate(-50%, -50%);
+    will-change: transform;
     transition: opacity 0.3s;
     opacity: 0;
 }
