@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - VaneKonex Rádio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+        :root {
+            --bg-color: #08090d;
+            --neon-cyan: #00f3ff;
+            --neon-magenta: #ff007f;
+            --glass-bg: rgba(20, 22, 35, 0.6);
+            --glass-border: rgba(0, 243, 255, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .login-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+        .login-card h1 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+        .login-card h1 span { color: var(--neon-cyan); }
+        .login-card .login-subtitle {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+        .login-card .login-icon {
+            font-size: 3rem;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+        }
+        .login-card input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .login-card input:focus {
+            border-color: var(--neon-cyan);
+        }
+        .login-error {
+            color: #e74c3c;
+            font-size: 0.82rem;
+            margin-bottom: 12px;
+            display: none;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--neon-magenta), var(--neon-cyan));
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.2s;
+        }
+        .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Dashboard */
+        .dashboard { display: none; }
+        .dashboard.active { display: block; }
+
+        .admin-header {
+            background: var(--glass-bg);
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .admin-header h2 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-header h2 span { color: var(--neon-cyan); }
+        .btn-logout {
+            padding: 8px 18px;
+            background: rgba(231,76,60,0.2);
+            border: 1px solid rgba(231,76,60,0.4);
+            border-radius: 8px;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-logout:hover {
+            background: rgba(231,76,60,0.35);
+        }
+
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(8,9,13,0.6);
+        }
+        .admin-tab {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .admin-tab:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .admin-tab.active {
+            color: var(--neon-cyan);
+            border-color: var(--neon-cyan);
+            background: rgba(0,243,255,0.08);
+        }
+
+        /* Content panels */
+        .admin-content {
+            padding: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .admin-panel {
+            display: none;
+        }
+        .admin-panel.active { display: block; }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .panel-title i { color: var(--neon-cyan); }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            color: #aaa;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--neon-cyan);
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        .btn-save {
+            padding: 11px 28px;
+            background: linear-gradient(135deg, var(--neon-magenta), var(--neon-cyan));
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.2s;
+            margin-top: 8px;
+        }
+        .btn-save:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .save-feedback {
+            display: inline-block;
+            margin-left: 12px;
+            font-size: 0.82rem;
+            color: #2ecc71;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .save-feedback.show { opacity: 1; }
+
+        /* Schedule table */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+        .schedule-table th,
+        .schedule-table td {
+            padding: 10px 12px;
+            border: 1px solid var(--glass-border);
+            text-align: left;
+            font-size: 0.85rem;
+        }
+        .schedule-table th {
+            background: rgba(0,243,255,0.08);
+            color: var(--neon-cyan);
+            font-weight: 600;
+        }
+        .schedule-table input {
+            width: 100%;
+            padding: 6px 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.82rem;
+            outline: none;
+        }
+        .schedule-table input:focus { border-color: var(--neon-cyan); }
+        .btn-add-row {
+            padding: 6px 14px;
+            background: rgba(0,243,255,0.1);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 6px;
+            color: var(--neon-cyan);
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+        .btn-add-row:hover { background: rgba(0,243,255,0.2); }
+        .btn-remove-row {
+            padding: 4px 10px;
+            background: rgba(231,76,60,0.15);
+            border: 1px solid rgba(231,76,60,0.3);
+            border-radius: 4px;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+        }
+        .btn-remove-row:hover { background: rgba(231,76,60,0.3); }
+
+        /* Color preview */
+        .color-preview {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 2px solid var(--glass-border);
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-tabs {
+                padding: 12px 16px;
+                gap: 4px;
+            }
+            .admin-tab {
+                padding: 6px 10px;
+                font-size: 0.72rem;
+            }
+            .admin-content { padding: 16px; }
+            .admin-header { padding: 12px 16px; }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.success {
+            background: rgba(46,204,113,0.2);
+            border: 1px solid rgba(46,204,113,0.4);
+            color: #2ecc71;
+        }
+        .toast.error {
+            background: rgba(231,76,60,0.2);
+            border: 1px solid rgba(231,76,60,0.4);
+            color: #e74c3c;
+        }
+
+        /* Back link */
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.82rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--neon-cyan); }
+    </style>
+</head>
+<body>
+
+    <div class="login-screen" id="login-screen">
+        <div class="login-card">
+            <div class="login-icon"><i class="fa-solid fa-lock"></i></div>
+            <h1>Vane<span>Konex</span> Admin</h1>
+            <p class="login-subtitle">Painel de Administração</p>
+            <form id="login-form">
+                <input type="password" id="login-password" placeholder="Digite a senha de acesso" autocomplete="current-password">
+                <div class="login-error" id="login-error">Senha incorreta. Tente novamente.</div>
+                <button type="submit" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+        <div class="admin-header">
+            <h2><i class="fa-solid fa-tower-broadcast"></i> Vane<span>Konex</span> Admin</h2>
+            <div style="display:flex;align-items:center;gap:14px;">
+                <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Voltar ao Site</a>
+                <button class="btn-logout" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+            </div>
+        </div>
+
+        <div class="admin-tabs" id="admin-tabs">
+            <button class="admin-tab active" data-tab="geral"><i class="fa-solid fa-circle-info"></i> Informações</button>
+            <button class="admin-tab" data-tab="contato"><i class="fa-solid fa-phone"></i> Contato</button>
+            <button class="admin-tab" data-tab="social"><i class="fa-solid fa-share-nodes"></i> Redes Sociais</button>
+            <button class="admin-tab" data-tab="vdj"><i class="fa-solid fa-headset"></i> Virtual DJ</button>
+            <button class="admin-tab" data-tab="programacao"><i class="fa-solid fa-calendar"></i> Programação</button>
+            <button class="admin-tab" data-tab="locutora"><i class="fa-solid fa-microphone"></i> Locutora</button>
+            <button class="admin-tab" data-tab="aparencia"><i class="fa-solid fa-palette"></i> Aparência</button>
+        </div>
+
+        <div class="admin-content">
+
+            <div class="admin-panel active" id="panel-geral">
+                <h3 class="panel-title"><i class="fa-solid fa-circle-info"></i> Informações Gerais</h3>
+                <div class="form-group">
+                    <label>Nome da Rádio</label>
+                    <input type="text" id="cfg-radio-nome" placeholder="VaneKonex Rádio">
+                </div>
+                <div class="form-group">
+                    <label>Slogan</label>
+                    <input type="text" id="cfg-radio-slogan" placeholder="Sua Rádio, Sua Conexão">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="cfg-radio-descricao" placeholder="Descrição da rádio..."></textarea>
+                </div>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-geral">✓ Salvo!</span>
+            </div>
+
+            <div class="admin-panel" id="panel-contato">
+                <h3 class="panel-title"><i class="fa-solid fa-phone"></i> Contato</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="text" id="cfg-telefone" placeholder="(11) 99999-9999">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp</label>
+                        <input type="text" id="cfg-whatsapp" placeholder="(11) 99999-9999">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Link WhatsApp (com https://wa.me/...)</label>
+                    <input type="text" id="cfg-whatsapp-link" placeholder="https://wa.me/5511999999999">
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="cfg-email" placeholder="contato@vanekonex.com.br">
+                </div>
+                <div class="form-group">
+                    <label>Endereço</label>
+                    <input type="text" id="cfg-endereco" placeholder="Rua da Música, 123 - Centro">
+                </div>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-contato">✓ Salvo!</span>
+            </div>
+
+            <div class="admin-panel" id="panel-social">
+                <h3 class="panel-title"><i class="fa-solid fa-share-nodes"></i> Redes Sociais</h3>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-instagram"></i> Instagram URL</label>
+                    <input type="url" id="cfg-instagram" placeholder="https://instagram.com/vanekonex">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-facebook"></i> Facebook URL</label>
+                    <input type="url" id="cfg-facebook" placeholder="https://facebook.com/vanekonex">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-youtube"></i> YouTube URL</label>
+                    <input type="url" id="cfg-youtube" placeholder="https://youtube.com/vanekonex">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-twitter"></i> Twitter URL</label>
+                    <input type="url" id="cfg-twitter" placeholder="https://twitter.com/vanekonex">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-tiktok"></i> TikTok URL</label>
+                    <input type="url" id="cfg-tiktok" placeholder="https://tiktok.com/@vanekonex">
+                </div>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-social">✓ Salvo!</span>
+            </div>
+
+            <div class="admin-panel" id="panel-vdj">
+                <h3 class="panel-title"><i class="fa-solid fa-headset"></i> Virtual DJ</h3>
+                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">Configure a URL do stream para detecção automática de transmissão ao vivo. O sistema verifica periodicamente se o stream está ativo.</p>
+                <div class="form-group">
+                    <label>URL do Stream</label>
+                    <input type="url" id="cfg-vdj-stream" placeholder="http://seuservidor.com:8000/stream">
+                </div>
+                <div class="form-group">
+                    <label>Intervalo de Verificação (segundos)</label>
+                    <input type="number" id="cfg-vdj-interval" placeholder="30" min="10" max="300">
+                </div>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-vdj">✓ Salvo!</span>
+            </div>
+
+            <div class="admin-panel" id="panel-programacao">
+                <h3 class="panel-title"><i class="fa-solid fa-calendar"></i> Programação</h3>
+                <table class="schedule-table" id="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Programa</th>
+                            <th>DJ / Locutor</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body"></tbody>
+                </table>
+                <button class="btn-add-row" onclick="addScheduleRow()"><i class="fa-solid fa-plus"></i> Adicionar Programa</button>
+                <br>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-programacao">✓ Salvo!</span>
+            </div>
+
+            <div class="admin-panel" id="panel-locutora">
+                <h3 class="panel-title"><i class="fa-solid fa-microphone"></i> Locutora</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome</label>
+                        <input type="text" id="cfg-locutora-nome" placeholder="Vanessa Corrêa">
+                    </div>
+                    <div class="form-group">
+                        <label>URL da Foto</label>
+                        <input type="url" id="cfg-locutora-foto" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Bio / Descrição</label>
+                    <textarea id="cfg-locutora-bio" placeholder="Locutora apaixonada por rádio..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-instagram"></i> Instagram</label>
+                        <input type="url" id="cfg-locutora-instagram" placeholder="https://instagram.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-facebook"></i> Facebook</label>
+                        <input type="url" id="cfg-locutora-facebook" placeholder="https://facebook.com/...">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-twitter"></i> Twitter</label>
+                        <input type="url" id="cfg-locutora-twitter" placeholder="https://twitter.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-tiktok"></i> TikTok</label>
+                        <input type="url" id="cfg-locutora-tiktok" placeholder="https://tiktok.com/...">
+                    </div>
+                </div>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-locutora">✓ Salvo!</span>
+            </div>
+
+            <div class="admin-panel" id="panel-aparencia">
+                <h3 class="panel-title"><i class="fa-solid fa-palette"></i> Aparência</h3>
+                <div class="form-group">
+                    <label>URL do Logo</label>
+                    <input type="url" id="cfg-logo-url" placeholder="logo.png">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cor Primária <span class="color-preview" id="preview-primaria"></span></label>
+                        <input type="text" id="cfg-cor-primaria" placeholder="#00f3ff">
+                    </div>
+                    <div class="form-group">
+                        <label>Cor Secundária <span class="color-preview" id="preview-secundaria"></span></label>
+                        <input type="text" id="cfg-cor-secundaria" placeholder="#ff007f">
+                    </div>
+                </div>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-aparencia">✓ Salvo!</span>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+    let currentPassword = '';
+    let currentConfig = {};
+
+    // Toast notification
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+
+    // Login (com senha konex2026 direta)
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const pwd = document.getElementById('login-password').value;
+        if (pwd === 'konex2026') {
+            currentPassword = pwd;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+            loadConfig();
+        } else {
+            document.getElementById('login-error').style.display = 'block';
+        }
+    });
+
+    // Logout
+    document.getElementById('btn-logout').addEventListener('click', function() {
+        currentPassword = '';
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('dashboard').classList.remove('active');
+        document.getElementById('login-password').value = '';
+        document.getElementById('login-error').style.display = 'none';
+    });
+
+    // Tabs
+    document.getElementById('admin-tabs').addEventListener('click', function(e) {
+        const tab = e.target.closest('.admin-tab');
+        if (!tab) return;
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        const panelId = 'panel-' + tab.getAttribute('data-tab');
+        document.getElementById(panelId).classList.add('active');
+    });
+
+    // Load config from API
+    async function loadConfig() {
+        try {
+            const res = await fetch('api.php');
+            if (res.ok) {
+                currentConfig = await res.json();
+            }
+        } catch(e) {
+            const cached = localStorage.getItem('vanekonex_config');
+            if (cached) currentConfig = JSON.parse(cached);
+        }
+        populateForm();
+    }
+
+    function populateForm() {
+        const c = currentConfig;
+        setVal('cfg-radio-nome', c.radio_nome);
+        setVal('cfg-radio-slogan', c.radio_slogan);
+        setVal('cfg-radio-descricao', c.radio_descricao);
+        setVal('cfg-telefone', c.telefone);
+        setVal('cfg-whatsapp', c.whatsapp);
+        setVal('cfg-whatsapp-link', c.whatsapp_link);
+        setVal('cfg-email', c.email);
+        setVal('cfg-endereco', c.endereco);
+        setVal('cfg-instagram', c.instagram);
+        setVal('cfg-facebook', c.facebook);
+        setVal('cfg-youtube', c.youtube);
+        setVal('cfg-twitter', c.twitter);
+        setVal('cfg-tiktok', c.tiktok);
+        setVal('cfg-vdj-stream', c.vdj_stream_url);
+        setVal('cfg-vdj-interval', c.vdj_check_interval);
+        setVal('cfg-locutora-nome', c.locutora_nome);
+        setVal('cfg-locutora-foto', c.locutora_foto);
+        setVal('cfg-locutora-bio', c.locutora_bio);
+        setVal('cfg-locutora-instagram', c.locutora_instagram);
+        setVal('cfg-locutora-facebook', c.locutora_facebook);
+        setVal('cfg-locutora-twitter', c.locutora_twitter);
+        setVal('cfg-locutora-tiktok', c.locutora_tiktok);
+        setVal('cfg-logo-url', c.logo_url);
+        setVal('cfg-cor-primaria', c.cor_primaria);
+        setVal('cfg-cor-secundaria', c.cor_secundaria);
+
+        updateColorPreviews();
+        populateSchedule(c.programacao || []);
+    }
+
+    function setVal(id, val) {
+        const el = document.getElementById(id);
+        if (el && val !== undefined && val !== null) el.value = val;
+    }
+
+    function getVal(id) {
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+    }
+
+    function updateColorPreviews() {
+        const p = document.getElementById('preview-primaria');
+        const s = document.getElementById('preview-secundaria');
+        if (p) p.style.background = getVal('cfg-cor-primaria') || '#00f3ff';
+        if (s) s.style.background = getVal('cfg-cor-secundaria') || '#ff007f';
+    }
+
+    // Color preview live update
+    const corPrimariaEl = document.getElementById('cfg-cor-primaria');
+    const corSecundariaEl = document.getElementById('cfg-cor-secundaria');
+    if (corPrimariaEl) corPrimariaEl.addEventListener('input', updateColorPreviews);
+    if (corSecundariaEl) corSecundariaEl.addEventListener('input', updateColorPreviews);
+
+    // Schedule
+    function populateSchedule(items) {
+        const tbody = document.getElementById('schedule-body');
+        tbody.innerHTML = '';
+        items.forEach(item => addScheduleRow(item.horario, item.programa, item.dj));
+    }
+
+    function addScheduleRow(horario, programa, dj) {
+        const tbody = document.getElementById('schedule-body');
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+            '<td><input type="text" class="sch-horario" placeholder="00:00 - 00:00" value="' + escapeAttr(horario || '') + '"></td>' +
+            '<td><input type="text" class="sch-programa" placeholder="Nome do programa" value="' + escapeAttr(programa || '') + '"></td>' +
+            '<td><input type="text" class="sch-dj" placeholder="DJ / Locutor" value="' + escapeAttr(dj || '') + '"></td>' +
+            '<td><button class="btn-remove-row" onclick="this.closest(\'tr\').remove()"><i class="fa-solid fa-trash"></i></button></td>';
+        tbody.appendChild(tr);
+    }
+
+    function escapeAttr(str) {
+        return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&gt;');
+    }
+
+    function getScheduleData() {
+        const rows = document.querySelectorAll('#schedule-body tr');
+        const data = [];
+        rows.forEach(row => {
+            const horario = row.querySelector('.sch-horario').value.trim();
+            const programa = row.querySelector('.sch-programa').value.trim();
+            const dj = row.querySelector('.sch-dj').value.trim();
+            if (horario || programa || dj) {
+                data.push({ horario: horario, programa: programa, dj: dj });
+            }
+        });
+        return data;
+    }
+
+    // Save config
+    async function saveConfig() {
+        const config = {
+            radio_nome: getVal('cfg-radio-nome'),
+            radio_slogan: getVal('cfg-radio-slogan'),
+            radio_descricao: getVal('cfg-radio-descricao'),
+            telefone: getVal('cfg-telefone'),
+            whatsapp: getVal('cfg-whatsapp'),
+            whatsapp_link: getVal('cfg-whatsapp-link'),
+            email: getVal('cfg-email'),
+            endereco: getVal('cfg-endereco'),
+            instagram: getVal('cfg-instagram'),
+            facebook: getVal('cfg-facebook'),
+            youtube: getVal('cfg-youtube'),
+            twitter: getVal('cfg-twitter'),
+            tiktok: getVal('cfg-tiktok'),
+            vdj_stream_url: getVal('cfg-vdj-stream'),
+            vdj_check_interval: parseInt(getVal('cfg-vdj-interval')) || 30,
+            locutora_nome: getVal('cfg-locutora-nome'),
+            locutora_bio: getVal('cfg-locutora-bio'),
+            locutora_foto: getVal('cfg-locutora-foto'),
+            locutora_instagram: getVal('cfg-locutora-instagram'),
+            locutora_facebook: getVal('cfg-locutora-facebook'),
+            locutora_twitter: getVal('cfg-locutora-twitter'),
+            locutora_tiktok: getVal('cfg-locutora-tiktok'),
+            logo_url: getVal('cfg-logo-url'),
+            cor_primaria: getVal('cfg-cor-primaria'),
+            cor_secundaria: getVal('cfg-cor-secundaria'),
+            programacao: getScheduleData(),
+            password: currentPassword
+        };
+
+        // Save to localStorage
+        const configWithoutPwd = Object.assign({}, config);
+        delete configWithoutPwd.password;
+        localStorage.setItem('vanekonex_config', JSON.stringify(configWithoutPwd));
+
+        // Save to server
+        try {
+            const res = await fetch('api.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config)
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showToast('Configuração salva com sucesso!', 'success');
+            } else {
+                showToast('Erro: ' + (data.error || 'Falha ao salvar'), 'error');
+            }
+        } catch(e) {
+            showToast('Salvo localmente (servidor indisponível)', 'success');
+        }
+
+        currentConfig = configWithoutPwd;
+    }
+    </script>
+</body>
+</html>
