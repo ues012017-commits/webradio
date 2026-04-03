@@ -236,11 +236,18 @@ function createParticles() {
 // Sticky Header
 function initStickyHeader() {
     const header = document.querySelector('header');
+    let ticking = false;
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+                ticking = false;
+            });
+            ticking = true;
         }
     });
 }
@@ -250,11 +257,18 @@ function initScrollTop() {
     const scrollTopBtn = document.getElementById('scroll-top');
     if (!scrollTopBtn) return;
 
+    let scrollTicking = false;
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 500) {
-            scrollTopBtn.classList.add('visible');
-        } else {
-            scrollTopBtn.classList.remove('visible');
+        if (!scrollTicking) {
+            requestAnimationFrame(() => {
+                if (window.scrollY > 500) {
+                    scrollTopBtn.classList.add('visible');
+                } else {
+                    scrollTopBtn.classList.remove('visible');
+                }
+                scrollTicking = false;
+            });
+            scrollTicking = true;
         }
     });
 
@@ -489,8 +503,7 @@ function initCursorGlow() {
 
     document.addEventListener('mousemove', (e) => {
         glow.classList.add('active');
-        glow.style.left = e.clientX + 'px';
-        glow.style.top = e.clientY + 'px';
+        glow.style.transform = 'translate(' + (e.clientX - 150) + 'px, ' + (e.clientY - 150) + 'px)';
     });
 
     document.addEventListener('mouseleave', () => {
