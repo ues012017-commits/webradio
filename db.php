@@ -73,7 +73,7 @@ function saveConfig(PDO $pdo, array $data, int $minInterval, int $maxInterval): 
         // Atualiza configurações simples (chave-valor)
         $stmt = $pdo->prepare(
             'INSERT INTO configuracao (chave, valor) VALUES (:chave, :valor)
-             ON DUPLICATE KEY UPDATE valor = VALUES(valor)'
+             ON DUPLICATE KEY UPDATE valor = :valor_update'
         );
 
         foreach ($allowedKeys as $key) {
@@ -82,7 +82,7 @@ function saveConfig(PDO $pdo, array $data, int $minInterval, int $maxInterval): 
                     ? (string) max($minInterval, min($maxInterval, intval($data[$key])))
                     : (string) $data[$key];
 
-                $stmt->execute(['chave' => $key, 'valor' => $valor]);
+                $stmt->execute(['chave' => $key, 'valor' => $valor, 'valor_update' => $valor]);
             }
         }
 
