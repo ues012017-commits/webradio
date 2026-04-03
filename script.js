@@ -836,12 +836,14 @@ function applySiteConfig(cfg) {
 // VIRTUAL DJ STREAM CHECK
 // =============================================
 const VDJ_DEFAULT_INTERVAL = 30;
+const VDJ_MIN_INTERVAL = 10;
+const VDJ_MAX_INTERVAL = 300;
 let vdjCheckTimer = null;
 
 function initVirtualDJCheck() {
     checkVDJStream();
     let interval = parseInt(localStorage.getItem('vdj_check_interval')) || VDJ_DEFAULT_INTERVAL;
-    interval = Math.max(10, Math.min(300, interval));
+    interval = Math.max(VDJ_MIN_INTERVAL, Math.min(VDJ_MAX_INTERVAL, interval));
     vdjCheckTimer = setInterval(checkVDJStream, interval * 1000);
 }
 
