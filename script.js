@@ -303,13 +303,33 @@ function initChatbot() {
         container.classList.remove('active');
     });
 
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
     function addMessage(text, isUser) {
         const msg = document.createElement('div');
         msg.className = 'chat-message ' + (isUser ? 'user-message' : 'bot-message');
-        msg.innerHTML = `
-            <div class="message-avatar"><i class="fa-solid fa-${isUser ? 'user' : 'robot'}"></i></div>
-            <div class="message-content"><p>${text}</p></div>
-        `;
+
+        const avatar = document.createElement('div');
+        avatar.className = 'message-avatar';
+        avatar.innerHTML = '<i class="fa-solid fa-' + (isUser ? 'user' : 'robot') + '"></i>';
+
+        const content = document.createElement('div');
+        content.className = 'message-content';
+        const p = document.createElement('p');
+
+        if (isUser) {
+            p.textContent = text;
+        } else {
+            p.innerHTML = text;
+        }
+
+        content.appendChild(p);
+        msg.appendChild(avatar);
+        msg.appendChild(content);
         messagesContainer.appendChild(msg);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
@@ -399,7 +419,7 @@ function initForms() {
             const artista = document.getElementById('pedido-artista').value;
             const msg = document.getElementById('pedido-msg').value;
 
-            const whatsappMsg = `🎵 *Pedido Musical - VaneKonex*%0A%0A👤 Nome: ${nome}%0A🎶 Música: ${musica}%0A🎤 Artista: ${artista}%0A💬 Recado: ${msg}`;
+            const whatsappMsg = `🎵 *Pedido Musical - VaneKonex*%0A%0A👤 Nome: ${encodeURIComponent(nome)}%0A🎶 Música: ${encodeURIComponent(musica)}%0A🎤 Artista: ${encodeURIComponent(artista)}%0A💬 Recado: ${encodeURIComponent(msg)}`;
             window.open(`https://wa.me/5511999999999?text=${whatsappMsg}`, '_blank');
             this.reset();
         });
