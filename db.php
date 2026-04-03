@@ -4,8 +4,8 @@
 // ============================================
 
 $dbHost = getenv('DB_HOST') ?: 'localhost';
-$dbName = getenv('DB_NAME') ?: 'webradio';
-$dbUser = getenv('DB_USER') ?: 'root';
+$dbName = getenv('DB_NAME') ?: 'iubsit15_radio';
+$dbUser = getenv('DB_USER') ?: 'iubsit15_radiouser';
 $dbPass = getenv('DB_PASS') ?: '';
 $dbPort = getenv('DB_PORT') ?: '3306';
 

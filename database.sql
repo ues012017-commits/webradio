@@ -2,11 +2,11 @@
 -- VaneKonex Rádio - Banco de Dados MySQL
 -- ============================================
 
-CREATE DATABASE IF NOT EXISTS webradio
+CREATE DATABASE IF NOT EXISTS iubsit15_radio
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
-USE webradio;
+USE iubsit15_radio;
 
 -- --------------------------------------------
 -- Tabela: configuracao (chave-valor)

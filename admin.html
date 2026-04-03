@@ -366,6 +366,48 @@
             transition: color 0.3s;
         }
         .back-link:hover { color: var(--neon-cyan); }
+
+        /* Music list */
+        .musica-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            transition: all 0.3s;
+        }
+        .musica-item:hover {
+            background: rgba(0,243,255,0.06);
+            border-color: var(--glass-border);
+        }
+        .musica-item .musica-index {
+            color: var(--neon-cyan);
+            font-size: 0.75rem;
+            font-weight: 700;
+            min-width: 28px;
+            text-align: center;
+        }
+        .musica-item .musica-nome {
+            flex: 1;
+            font-size: 0.85rem;
+            color: #ddd;
+        }
+        .musica-item .musica-play-btn {
+            padding: 4px 10px;
+            background: rgba(0,243,255,0.1);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 6px;
+            color: var(--neon-cyan);
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+        }
+        .musica-item .musica-play-btn:hover {
+            background: rgba(0,243,255,0.25);
+        }
     </style>
 </head>
 <body>
@@ -400,6 +442,7 @@
             <button class="admin-tab" data-tab="social"><i class="fa-solid fa-share-nodes"></i> Redes Sociais</button>
             <button class="admin-tab" data-tab="vdj"><i class="fa-solid fa-headset"></i> Virtual DJ</button>
             <button class="admin-tab" data-tab="programacao"><i class="fa-solid fa-calendar"></i> Programação</button>
+            <button class="admin-tab" data-tab="musicas"><i class="fa-solid fa-music"></i> Músicas</button>
             <button class="admin-tab" data-tab="locutora"><i class="fa-solid fa-microphone"></i> Locutora</button>
             <button class="admin-tab" data-tab="aparencia"><i class="fa-solid fa-palette"></i> Aparência</button>
         </div>
@@ -515,6 +558,28 @@
                 <br>
                 <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
                 <span class="save-feedback" id="feedback-programacao">✓ Salvo!</span>
+            </div>
+
+            <!-- Músicas -->
+            <div class="admin-panel" id="panel-musicas">
+                <h3 class="panel-title"><i class="fa-solid fa-music"></i> Músicas da Pasta</h3>
+                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">
+                    Gerencie as músicas disponíveis na pasta <code style="color:var(--neon-cyan);">musicas/</code>. 
+                    Clique em "Embaralhar Playlist" para tocar as músicas em ordem aleatória, ou em "Tocar Todas" para iniciar a reprodução na ordem atual.
+                </p>
+                <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;">
+                    <button class="btn-save" onclick="playAllMusicas()" style="margin-top:0;">
+                        <i class="fa-solid fa-play"></i> Tocar Todas
+                    </button>
+                    <button class="btn-add-row" onclick="shuffleMusicas()" style="margin-bottom:0;">
+                        <i class="fa-solid fa-shuffle"></i> Embaralhar Playlist
+                    </button>
+                    <button class="btn-add-row" onclick="loadMusicas()" style="margin-bottom:0;">
+                        <i class="fa-solid fa-arrows-rotate"></i> Atualizar Lista
+                    </button>
+                </div>
+                <div id="musicas-count" style="color:#aaa;font-size:0.82rem;margin-bottom:12px;"></div>
+                <div id="musicas-list" style="max-height:400px;overflow-y:auto;"></div>
             </div>
 
             <!-- Locutora -->
@@ -802,6 +867,103 @@
 
         currentConfig = configWithoutPwd;
     }
+
+    // =====================
+    // Músicas Management
+    // =====================
+    let musicasList = [];
+
+    async function loadMusicas() {
+        try {
+            const res = await fetch('playlist.php');
+            if (res.ok) {
+                musicasList = await res.json();
+                renderMusicas();
+            } else {
+                showToast('Erro ao carregar músicas', 'error');
+            }
+        } catch(e) {
+            showToast('Erro ao conectar com o servidor', 'error');
+        }
+    }
+
+    async function shuffleMusicas() {
+        try {
+            const res = await fetch('playlist.php?shuffle=1');
+            if (res.ok) {
+                musicasList = await res.json();
+                renderMusicas();
+                showToast('Playlist embaralhada com sucesso!', 'success');
+            } else {
+                showToast('Erro ao embaralhar músicas', 'error');
+            }
+        } catch(e) {
+            showToast('Erro ao conectar com o servidor', 'error');
+        }
+    }
+
+    function playAllMusicas() {
+        if (musicasList.length === 0) {
+            showToast('Nenhuma música encontrada. Adicione arquivos MP3 na pasta musicas/', 'error');
+            return;
+        }
+        window.open('index.html?autoplay=1', '_blank', 'noopener,noreferrer');
+        showToast('Abrindo player com ' + musicasList.length + ' músicas...', 'success');
+    }
+
+    function renderMusicas() {
+        const container = document.getElementById('musicas-list');
+        const countEl = document.getElementById('musicas-count');
+
+        if (musicasList.length === 0) {
+            container.innerHTML = '<p style="color:#666;font-size:0.85rem;padding:20px;text-align:center;">Nenhuma música encontrada na pasta <code>musicas/</code>.<br>Adicione arquivos .mp3 para começar.</p>';
+            countEl.textContent = '0 músicas encontradas';
+            return;
+        }
+
+        countEl.textContent = musicasList.length + ' música(s) encontrada(s)';
+
+        let html = '';
+        musicasList.forEach(function(arquivo, i) {
+            const nomeArquivo = arquivo.split('/').pop().replace('.mp3', '');
+            const partes = nomeArquivo.split(' - ');
+            let displayName;
+            if (partes.length >= 3) {
+                displayName = '<strong>' + escapeAttr(partes[2].trim()) + '</strong> <span style="color:#888;">— ' + escapeAttr(partes[1].trim()) + '</span>';
+            } else {
+                displayName = escapeAttr(nomeArquivo);
+            }
+            html += '<div class="musica-item">' +
+                '<span class="musica-index">' + (i + 1) + '</span>' +
+                '<span class="musica-nome">' + displayName + '</span>' +
+                '<button class="musica-play-btn" onclick="previewMusica(' + i + ')"><i class="fa-solid fa-play"></i></button>' +
+                '</div>';
+        });
+        container.innerHTML = html;
+    }
+
+    let previewAudio = null;
+    function previewMusica(index) {
+        if (previewAudio) {
+            previewAudio.pause();
+            previewAudio = null;
+        }
+        previewAudio = new Audio(musicasList[index]);
+        previewAudio.volume = 0.5;
+        previewAudio.play().catch(function() {
+            showToast('Não foi possível reproduzir. Clique na página primeiro.', 'error');
+        });
+        const nomeArquivo = musicasList[index].split('/').pop().replace('.mp3', '');
+        showToast('Tocando: ' + nomeArquivo, 'success');
+    }
+
+    // Load music list when the Músicas tab is first activated
+    document.getElementById('admin-tabs').addEventListener('click', function(e) {
+        const tab = e.target.closest('.admin-tab');
+        if (tab && tab.getAttribute('data-tab') === 'musicas' && musicasList.length === 0) {
+            loadMusicas();
+        }
+    });
     </script>
 </body>
 </html>
