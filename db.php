@@ -65,6 +65,14 @@ function saveConfig(PDO $pdo, array $data, int $minInterval, int $maxInterval): 
         'locutora_nome', 'locutora_bio', 'locutora_foto',
         'locutora_instagram', 'locutora_facebook', 'locutora_twitter', 'locutora_tiktok',
         'logo_url', 'cor_primaria', 'cor_secundaria',
+        // Streaming
+        'streaming_software', 'server_type', 'stream_port', 'stream_mount',
+        'audio_format', 'audio_bitrate', 'stream_backup',
+        // Live
+        'live_method', 'rtmp_url', 'stream_key', 'is_live',
+        // Layout
+        'bg_effect', 'player_style', 'smoke_intensity', 'neon_glow',
+        'font_family', 'card_style', 'page_layout', 'border_radius',
     ];
 
     $pdo->beginTransaction();

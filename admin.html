@@ -208,8 +208,13 @@
             font-family: 'Poppins', sans-serif;
         }
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             border-color: var(--neon-cyan);
+        }
+        .form-group select option {
+            background: #1a1a2e;
+            color: #fff;
         }
         .form-group textarea { resize: vertical; min-height: 80px; }
 
@@ -396,10 +401,12 @@
             <button class="admin-tab active" data-tab="geral"><i class="fa-solid fa-circle-info"></i> Informações</button>
             <button class="admin-tab" data-tab="contato"><i class="fa-solid fa-phone"></i> Contato</button>
             <button class="admin-tab" data-tab="social"><i class="fa-solid fa-share-nodes"></i> Redes Sociais</button>
-            <button class="admin-tab" data-tab="vdj"><i class="fa-solid fa-headset"></i> Virtual DJ</button>
+            <button class="admin-tab" data-tab="streaming"><i class="fa-solid fa-tower-broadcast"></i> Streaming</button>
+            <button class="admin-tab" data-tab="aovivo"><i class="fa-solid fa-broadcast-tower"></i> Ao Vivo</button>
+            <button class="admin-tab" data-tab="podcasts"><i class="fa-solid fa-podcast"></i> Podcasts</button>
             <button class="admin-tab" data-tab="programacao"><i class="fa-solid fa-calendar"></i> Programação</button>
             <button class="admin-tab" data-tab="locutora"><i class="fa-solid fa-microphone"></i> Locutora</button>
-            <button class="admin-tab" data-tab="aparencia"><i class="fa-solid fa-palette"></i> Aparência</button>
+            <button class="admin-tab" data-tab="layouts"><i class="fa-solid fa-palette"></i> Layouts &amp; Temas</button>
         </div>
 
         <div class="admin-content">
@@ -476,19 +483,204 @@
                 <span class="save-feedback" id="feedback-social">✓ Salvo!</span>
             </div>
 
-            <div class="admin-panel" id="panel-vdj">
-                <h3 class="panel-title"><i class="fa-solid fa-headset"></i> Virtual DJ</h3>
-                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">Configure a URL do stream para detecção automática de transmissão ao vivo. O sistema verifica periodicamente se o stream está ativo.</p>
+            <!-- ==================== STREAMING ==================== -->
+            <div class="admin-panel" id="panel-streaming">
+                <h3 class="panel-title"><i class="fa-solid fa-tower-broadcast"></i> Configuração de Streaming</h3>
+                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">Configure a fonte de streaming da sua rádio. Escolha o programa/serviço que você utiliza para transmitir.</p>
+                
+                <div class="form-group">
+                    <label>Software de Streaming</label>
+                    <select id="cfg-streaming-software">
+                        <option value="virtual_dj">Virtual DJ</option>
+                        <option value="obs_studio">OBS Studio</option>
+                        <option value="sam_broadcaster">SAM Broadcaster</option>
+                        <option value="radio_boss">RadioBOSS</option>
+                        <option value="butt">BUTT (Broadcast Using This Tool)</option>
+                        <option value="mixxx">Mixxx</option>
+                        <option value="traktor">Traktor Pro</option>
+                        <option value="serato">Serato DJ</option>
+                        <option value="winamp">Winamp + SHOUTcast</option>
+                        <option value="nicecast">Nicecast / Audio Hijack</option>
+                        <option value="rocket_broadcaster">Rocket Broadcaster</option>
+                        <option value="broadwave">BroadWave</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Servidor</label>
+                    <select id="cfg-server-type">
+                        <option value="shoutcast_v1">SHOUTcast v1</option>
+                        <option value="shoutcast_v2">SHOUTcast v2</option>
+                        <option value="icecast">Icecast 2</option>
+                        <option value="icecast_kh">Icecast KH</option>
+                        <option value="centova_cast">Centova Cast</option>
+                        <option value="azuracast">AzuraCast</option>
+                        <option value="radiojar">RadioJar</option>
+                        <option value="radio_co">Radio.co</option>
+                        <option value="live365">Live365</option>
+                        <option value="airtime">Airtime Pro / LibreTime</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label>URL do Stream</label>
                     <input type="url" id="cfg-vdj-stream" placeholder="http://seuservidor.com:8000/stream">
                 </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Porta do Stream</label>
+                        <input type="number" id="cfg-stream-port" placeholder="8000">
+                    </div>
+                    <div class="form-group">
+                        <label>Ponto de Montagem</label>
+                        <input type="text" id="cfg-stream-mount" placeholder="/stream ou /live">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Formato do Áudio</label>
+                        <select id="cfg-audio-format">
+                            <option value="mp3">MP3</option>
+                            <option value="aac">AAC / AAC+</option>
+                            <option value="ogg">OGG Vorbis</option>
+                            <option value="opus">Opus</option>
+                            <option value="flac">FLAC</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Bitrate (kbps)</label>
+                        <select id="cfg-audio-bitrate">
+                            <option value="64">64 kbps</option>
+                            <option value="96">96 kbps</option>
+                            <option value="128" selected>128 kbps</option>
+                            <option value="192">192 kbps</option>
+                            <option value="256">256 kbps</option>
+                            <option value="320">320 kbps</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label>Intervalo de Verificação (segundos)</label>
                     <input type="number" id="cfg-vdj-interval" placeholder="30" min="10" max="300">
                 </div>
+
+                <div class="form-group">
+                    <label>URL do Stream de Backup (opcional)</label>
+                    <input type="url" id="cfg-stream-backup" placeholder="http://backup.seuservidor.com:8000/stream">
+                </div>
+
                 <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
-                <span class="save-feedback" id="feedback-vdj">✓ Salvo!</span>
+                <span class="save-feedback" id="feedback-streaming">✓ Salvo!</span>
+            </div>
+
+            <!-- ==================== AO VIVO ==================== -->
+            <div class="admin-panel" id="panel-aovivo">
+                <h3 class="panel-title"><i class="fa-solid fa-broadcast-tower"></i> Transmissão ao Vivo</h3>
+                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">Configure a integração com programas de transmissão ao vivo. Ao iniciar uma transmissão com um desses programas, o site detecta automaticamente e exibe "AO VIVO".</p>
+
+                <div class="form-group">
+                    <label>Método de Transmissão ao Vivo</label>
+                    <select id="cfg-live-method">
+                        <option value="stream_detect">Detecção Automática (Stream URL)</option>
+                        <option value="manual">Ativação Manual (pelo painel)</option>
+                        <option value="api">Via API Externa</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-circle-check"></i> Status ao Vivo</label>
+                    <div style="display:flex;gap:10px;align-items:center;">
+                        <button class="btn-neon" id="btn-go-live" onclick="toggleLiveStatus(true)" style="padding:8px 18px;font-size:0.85rem;"><i class="fa-solid fa-broadcast-tower"></i> Entrar ao Vivo</button>
+                        <button class="btn-remove-row" id="btn-go-offline" onclick="toggleLiveStatus(false)" style="padding:8px 18px;font-size:0.85rem;"><i class="fa-solid fa-stop"></i> Encerrar</button>
+                        <span id="live-status-badge" style="padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;letter-spacing:1px;background:rgba(136,136,136,0.2);color:#888;">OFFLINE</span>
+                    </div>
+                </div>
+
+                <h4 style="margin:24px 0 12px;color:var(--neon-cyan);font-size:0.95rem;"><i class="fa-solid fa-plug"></i> Programas Compatíveis</h4>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px;">
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-headset" style="font-size:1.5rem;color:var(--neon-cyan);display:block;margin-bottom:6px;"></i>
+                        <strong>Virtual DJ</strong><br><span style="color:#888;">Stream → Icecast/SHOUTcast</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-video" style="font-size:1.5rem;color:#a29bfe;display:block;margin-bottom:6px;"></i>
+                        <strong>OBS Studio</strong><br><span style="color:#888;">RTMP → Servidor</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-tower-broadcast" style="font-size:1.5rem;color:#ff007f;display:block;margin-bottom:6px;"></i>
+                        <strong>SAM Broadcaster</strong><br><span style="color:#888;">Encoder integrado</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-microphone" style="font-size:1.5rem;color:#4ecdc4;display:block;margin-bottom:6px;"></i>
+                        <strong>BUTT</strong><br><span style="color:#888;">Broadcast simples</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-compact-disc" style="font-size:1.5rem;color:#fd79a8;display:block;margin-bottom:6px;"></i>
+                        <strong>Mixxx</strong><br><span style="color:#888;">DJ + Streaming</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-music" style="font-size:1.5rem;color:#ffe66d;display:block;margin-bottom:6px;"></i>
+                        <strong>RadioBOSS</strong><br><span style="color:#888;">Automação + Stream</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>URL RTMP (para OBS/similar)</label>
+                    <input type="url" id="cfg-rtmp-url" placeholder="rtmp://seuservidor.com/live">
+                </div>
+                <div class="form-group">
+                    <label>Chave de Transmissão</label>
+                    <input type="text" id="cfg-stream-key" placeholder="sua-chave-de-stream">
+                </div>
+
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-aovivo">✓ Salvo!</span>
+            </div>
+
+            <!-- ==================== PODCASTS ==================== -->
+            <div class="admin-panel" id="panel-podcasts">
+                <h3 class="panel-title"><i class="fa-solid fa-podcast"></i> Vídeo Podcasts</h3>
+                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">Gerencie seus vídeo podcasts diretamente por aqui. Adicione, edite ou exclua episódios.</p>
+
+                <div style="background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px;">
+                    <h4 style="margin-bottom:14px;color:var(--neon-cyan);font-size:0.92rem;"><i class="fa-solid fa-plus-circle"></i> Adicionar Novo Episódio</h4>
+                    <div class="form-group">
+                        <label>Título do Episódio</label>
+                        <input type="text" id="podcast-title" placeholder="Ex: Entrevista com DJ Carlos">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>URL do Vídeo (YouTube, Vimeo, etc.)</label>
+                            <input type="url" id="podcast-url" placeholder="https://youtube.com/watch?v=...">
+                        </div>
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <select id="podcast-category">
+                                <option value="Música">Música</option>
+                                <option value="Entrevista">Entrevista</option>
+                                <option value="Tecnologia">Tecnologia</option>
+                                <option value="Cultura">Cultura</option>
+                                <option value="Especial">Especial</option>
+                                <option value="Debate">Debate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <textarea id="podcast-description" placeholder="Descrição do episódio..." rows="3"></textarea>
+                    </div>
+                    <button class="btn-neon" onclick="addPodcastFromAdmin()" style="padding:10px 24px;font-size:0.85rem;"><i class="fa-solid fa-plus"></i> Adicionar Episódio</button>
+                </div>
+
+                <h4 style="margin-bottom:12px;color:#ccc;font-size:0.9rem;"><i class="fa-solid fa-list"></i> Episódios Cadastrados</h4>
+                <div id="podcast-list-admin" style="display:flex;flex-direction:column;gap:10px;">
+                    <!-- Populated by JS -->
+                </div>
             </div>
 
             <div class="admin-panel" id="panel-programacao">
@@ -550,8 +742,11 @@
                 <span class="save-feedback" id="feedback-locutora">✓ Salvo!</span>
             </div>
 
-            <div class="admin-panel" id="panel-aparencia">
-                <h3 class="panel-title"><i class="fa-solid fa-palette"></i> Aparência</h3>
+            <!-- ==================== LAYOUTS & TEMAS ==================== -->
+            <div class="admin-panel" id="panel-layouts">
+                <h3 class="panel-title"><i class="fa-solid fa-palette"></i> Layouts &amp; Temas</h3>
+                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">Escolha entre 40 temas prontos ou personalize cores, animações e efeitos. Ideal para personalizar para cada cliente.</p>
+
                 <div class="form-group">
                     <label>URL do Logo</label>
                     <input type="url" id="cfg-logo-url" placeholder="logo.png">
@@ -566,8 +761,110 @@
                         <input type="text" id="cfg-cor-secundaria" placeholder="#ff007f">
                     </div>
                 </div>
+
+                <h4 style="margin:20px 0 12px;color:var(--neon-cyan);font-size:0.95rem;"><i class="fa-solid fa-swatchbook"></i> Temas Prontos (40)</h4>
+                <p style="color:#666;font-size:0.78rem;margin-bottom:14px;">Clique em um tema para aplicar as cores automaticamente.</p>
+                <div id="theme-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:20px;max-height:420px;overflow-y:auto;padding-right:4px;">
+                </div>
+
+                <h4 style="margin:20px 0 12px;color:var(--neon-cyan);font-size:0.95rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> Animações &amp; Efeitos</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Efeito de Fundo</label>
+                        <select id="cfg-bg-effect">
+                            <option value="orbs">Orbes Animadas</option>
+                            <option value="particles">Partículas Flutuantes</option>
+                            <option value="stars">Céu Estrelado</option>
+                            <option value="matrix">Efeito Matrix</option>
+                            <option value="waves">Ondas Sonoras</option>
+                            <option value="gradient">Gradiente Animado</option>
+                            <option value="smoke_heavy">Fumaça Intensa</option>
+                            <option value="minimal">Mínimo / Limpo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estilo do Player</label>
+                        <select id="cfg-player-style">
+                            <option value="vinyl">Vinil Clássico</option>
+                            <option value="modern">Player Moderno</option>
+                            <option value="minimal">Minimalista</option>
+                            <option value="retro">Retrô Neon</option>
+                            <option value="wave">Waveform</option>
+                            <option value="circular">Circular 3D</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Intensidade da Fumaça</label>
+                        <select id="cfg-smoke-intensity">
+                            <option value="none">Desativada</option>
+                            <option value="light">Leve</option>
+                            <option value="medium">Média</option>
+                            <option value="heavy" selected>Intensa</option>
+                            <option value="extreme">Extrema</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Brilho Neon</label>
+                        <select id="cfg-neon-glow">
+                            <option value="off">Desativado</option>
+                            <option value="subtle">Sutil</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="intense">Intenso</option>
+                            <option value="extreme">Extremo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Fonte do Texto</label>
+                        <select id="cfg-font-family">
+                            <option value="Poppins">Poppins (Padrão)</option>
+                            <option value="Inter">Inter</option>
+                            <option value="Roboto">Roboto</option>
+                            <option value="Montserrat">Montserrat</option>
+                            <option value="Raleway">Raleway</option>
+                            <option value="Orbitron">Orbitron</option>
+                            <option value="Audiowide">Audiowide</option>
+                            <option value="Righteous">Righteous</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estilo dos Cards</label>
+                        <select id="cfg-card-style">
+                            <option value="glass" selected>Glassmorphism</option>
+                            <option value="solid">Sólido</option>
+                            <option value="outline">Contorno</option>
+                            <option value="gradient">Gradiente</option>
+                            <option value="neumorphism">Neumorphism</option>
+                            <option value="flat">Flat Design</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Layout da Página</label>
+                        <select id="cfg-page-layout">
+                            <option value="full" selected>Completo (Padrão)</option>
+                            <option value="compact">Compacto</option>
+                            <option value="landing">Landing Page</option>
+                            <option value="sidebar">Com Sidebar Fixa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Cantos dos Elementos</label>
+                        <select id="cfg-border-radius">
+                            <option value="sharp">Reto (0px)</option>
+                            <option value="slight">Leve (8px)</option>
+                            <option value="rounded" selected>Arredondado (16px)</option>
+                            <option value="pill">Pílula (50px)</option>
+                        </select>
+                    </div>
+                </div>
+
                 <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
-                <span class="save-feedback" id="feedback-aparencia">✓ Salvo!</span>
+                <span class="save-feedback" id="feedback-layouts">✓ Salvo!</span>
             </div>
 
         </div>
@@ -663,8 +960,39 @@
         setVal('cfg-cor-primaria', c.cor_primaria);
         setVal('cfg-cor-secundaria', c.cor_secundaria);
 
+        // Streaming fields
+        setVal('cfg-streaming-software', c.streaming_software);
+        setVal('cfg-server-type', c.server_type);
+        setVal('cfg-stream-port', c.stream_port);
+        setVal('cfg-stream-mount', c.stream_mount);
+        setVal('cfg-audio-format', c.audio_format);
+        setVal('cfg-audio-bitrate', c.audio_bitrate);
+        setVal('cfg-stream-backup', c.stream_backup);
+
+        // Live fields
+        setVal('cfg-live-method', c.live_method);
+        setVal('cfg-rtmp-url', c.rtmp_url);
+        setVal('cfg-stream-key', c.stream_key);
+
+        // Layout fields
+        setVal('cfg-bg-effect', c.bg_effect);
+        setVal('cfg-player-style', c.player_style);
+        setVal('cfg-smoke-intensity', c.smoke_intensity);
+        setVal('cfg-neon-glow', c.neon_glow);
+        setVal('cfg-font-family', c.font_family);
+        setVal('cfg-card-style', c.card_style);
+        setVal('cfg-page-layout', c.page_layout);
+        setVal('cfg-border-radius', c.border_radius);
+
+        // Live status
+        if (c.is_live === 'true' || c.is_live === true) {
+            updateLiveBadge(true);
+        }
+
         updateColorPreviews();
         populateSchedule(c.programacao || []);
+        loadPodcasts();
+        renderThemeGrid();
     }
 
     function setVal(id, val) {
@@ -754,6 +1082,28 @@
             logo_url: getVal('cfg-logo-url'),
             cor_primaria: getVal('cfg-cor-primaria'),
             cor_secundaria: getVal('cfg-cor-secundaria'),
+            // Streaming
+            streaming_software: getVal('cfg-streaming-software'),
+            server_type: getVal('cfg-server-type'),
+            stream_port: getVal('cfg-stream-port'),
+            stream_mount: getVal('cfg-stream-mount'),
+            audio_format: getVal('cfg-audio-format'),
+            audio_bitrate: getVal('cfg-audio-bitrate'),
+            stream_backup: getVal('cfg-stream-backup'),
+            // Live
+            live_method: getVal('cfg-live-method'),
+            rtmp_url: getVal('cfg-rtmp-url'),
+            stream_key: getVal('cfg-stream-key'),
+            // Layout
+            bg_effect: getVal('cfg-bg-effect'),
+            player_style: getVal('cfg-player-style'),
+            smoke_intensity: getVal('cfg-smoke-intensity'),
+            neon_glow: getVal('cfg-neon-glow'),
+            font_family: getVal('cfg-font-family'),
+            card_style: getVal('cfg-card-style'),
+            page_layout: getVal('cfg-page-layout'),
+            border_radius: getVal('cfg-border-radius'),
+            // Schedule
             programacao: getScheduleData(),
             password: currentPassword
         };
@@ -781,6 +1131,216 @@
         }
 
         currentConfig = configWithoutPwd;
+    }
+
+    // ==================== PODCAST MANAGEMENT ====================
+    const PODCAST_STORAGE_KEY = 'vanekonex_podcasts';
+
+    function getDefaultPodcasts() {
+        return [
+            {
+                id: 1,
+                title: 'VaneKonex Podcast #1 - Estreia',
+                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                description: 'Episódio de estreia do podcast da VaneKonex Rádio. Conheça nossa história e nossos planos.',
+                category: 'Especial',
+                date: '2026-01-15'
+            }
+        ];
+    }
+
+    function loadPodcasts() {
+        let podcasts = JSON.parse(localStorage.getItem(PODCAST_STORAGE_KEY) || 'null');
+        if (!podcasts) {
+            podcasts = getDefaultPodcasts();
+            localStorage.setItem(PODCAST_STORAGE_KEY, JSON.stringify(podcasts));
+        }
+        renderPodcastList(podcasts);
+    }
+
+    function renderPodcastList(podcasts) {
+        const container = document.getElementById('podcast-list-admin');
+        if (!container) return;
+        if (podcasts.length === 0) {
+            container.innerHTML = '<p style="color:#666;font-size:0.85rem;text-align:center;padding:20px;">Nenhum episódio cadastrado.</p>';
+            return;
+        }
+        container.innerHTML = podcasts.map(function(p) {
+            return '<div style="background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center;">' +
+                '<div style="flex:1;">' +
+                    '<strong style="color:#fff;font-size:0.9rem;">' + escapeAttr(p.title) + '</strong>' +
+                    '<div style="color:#888;font-size:0.75rem;margin-top:4px;">' +
+                        '<span style="background:rgba(0,243,255,0.15);padding:2px 8px;border-radius:10px;color:var(--neon-cyan);margin-right:8px;">' + escapeAttr(p.category) + '</span>' +
+                        escapeAttr(p.date || '') +
+                    '</div>' +
+                    '<div style="color:#666;font-size:0.78rem;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px;">' + escapeAttr(p.url) + '</div>' +
+                '</div>' +
+                '<div style="display:flex;gap:6px;margin-left:10px;">' +
+                    '<button class="btn-neon" onclick="editPodcast(' + p.id + ')" style="padding:6px 12px;font-size:0.75rem;"><i class="fa-solid fa-pen"></i></button>' +
+                    '<button class="btn-remove-row" onclick="deletePodcast(' + p.id + ')" style="padding:6px 12px;font-size:0.75rem;"><i class="fa-solid fa-trash"></i></button>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    function addPodcastFromAdmin() {
+        const title = document.getElementById('podcast-title').value.trim();
+        const url = document.getElementById('podcast-url').value.trim();
+        const category = document.getElementById('podcast-category').value;
+        const description = document.getElementById('podcast-description').value.trim();
+
+        if (!title || !url) {
+            showToast('Preencha o título e a URL do vídeo', 'error');
+            return;
+        }
+        try {
+            const parsed = new URL(url);
+            if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+                showToast('URL inválida. Use http:// ou https://', 'error');
+                return;
+            }
+        } catch(e) {
+            showToast('URL inválida', 'error');
+            return;
+        }
+
+        let podcasts = JSON.parse(localStorage.getItem(PODCAST_STORAGE_KEY) || '[]');
+        const newId = podcasts.length > 0 ? Math.max.apply(null, podcasts.map(function(p) { return p.id; })) + 1 : 1;
+        podcasts.push({
+            id: newId,
+            title: title,
+            url: url,
+            description: description,
+            category: category,
+            date: new Date().toISOString().split('T')[0]
+        });
+        localStorage.setItem(PODCAST_STORAGE_KEY, JSON.stringify(podcasts));
+        renderPodcastList(podcasts);
+
+        // Clear form
+        document.getElementById('podcast-title').value = '';
+        document.getElementById('podcast-url').value = '';
+        document.getElementById('podcast-description').value = '';
+        showToast('Episódio adicionado com sucesso!', 'success');
+    }
+
+    function editPodcast(id) {
+        let podcasts = JSON.parse(localStorage.getItem(PODCAST_STORAGE_KEY) || '[]');
+        const podcast = podcasts.find(function(p) { return p.id === id; });
+        if (!podcast) return;
+
+        document.getElementById('podcast-title').value = podcast.title;
+        document.getElementById('podcast-url').value = podcast.url;
+        document.getElementById('podcast-category').value = podcast.category;
+        document.getElementById('podcast-description').value = podcast.description || '';
+
+        // Remove old and re-add when saved
+        deletePodcast(id);
+        showToast('Editando episódio - modifique e clique em Adicionar', 'success');
+    }
+
+    function deletePodcast(id) {
+        let podcasts = JSON.parse(localStorage.getItem(PODCAST_STORAGE_KEY) || '[]');
+        podcasts = podcasts.filter(function(p) { return p.id !== id; });
+        localStorage.setItem(PODCAST_STORAGE_KEY, JSON.stringify(podcasts));
+        renderPodcastList(podcasts);
+    }
+
+    // ==================== LIVE STATUS ====================
+    function toggleLiveStatus(goLive) {
+        updateLiveBadge(goLive);
+        // Save to localStorage so the main site can read it
+        localStorage.setItem('vanekonex_is_live', goLive ? 'true' : 'false');
+        showToast(goLive ? 'Transmissão ao vivo ativada!' : 'Transmissão encerrada', goLive ? 'success' : 'error');
+    }
+
+    function updateLiveBadge(isLive) {
+        const badge = document.getElementById('live-status-badge');
+        if (!badge) return;
+        if (isLive) {
+            badge.textContent = 'AO VIVO';
+            badge.style.background = 'rgba(46, 204, 113, 0.2)';
+            badge.style.color = '#2ecc71';
+        } else {
+            badge.textContent = 'OFFLINE';
+            badge.style.background = 'rgba(136, 136, 136, 0.2)';
+            badge.style.color = '#888';
+        }
+    }
+
+    // ==================== 40 THEME PRESETS ====================
+    var THEME_PRESETS = [
+        { name: 'Neon Cyber', primary: '#00f3ff', secondary: '#ff007f', bg: '#08090d' },
+        { name: 'Sunset Glow', primary: '#ff6b35', secondary: '#f7c59f', bg: '#1a0a00' },
+        { name: 'Ocean Deep', primary: '#0077b6', secondary: '#00b4d8', bg: '#03071e' },
+        { name: 'Purple Haze', primary: '#9b5de5', secondary: '#f15bb5', bg: '#10002b' },
+        { name: 'Emerald Night', primary: '#2ecc71', secondary: '#27ae60', bg: '#0a1f0a' },
+        { name: 'Golden Hour', primary: '#f39c12', secondary: '#e74c3c', bg: '#1a1000' },
+        { name: 'Arctic Ice', primary: '#a8dadc', secondary: '#457b9d', bg: '#0d1b2a' },
+        { name: 'Cherry Blossom', primary: '#ff69b4', secondary: '#ff1493', bg: '#1a0010' },
+        { name: 'Midnight Blue', primary: '#1e3a5f', secondary: '#3a7bd5', bg: '#0a0e1a' },
+        { name: 'Fire Storm', primary: '#ff4500', secondary: '#ff8c00', bg: '#1a0500' },
+        { name: 'Mint Fresh', primary: '#00e5a0', secondary: '#00c9a7', bg: '#0a1a15' },
+        { name: 'Royal Purple', primary: '#7b2ff7', secondary: '#c471ed', bg: '#0f0020' },
+        { name: 'Coral Reef', primary: '#ff6f61', secondary: '#ff9a8b', bg: '#1a0d0a' },
+        { name: 'Electric Blue', primary: '#0000ff', secondary: '#4169e1', bg: '#000014' },
+        { name: 'Lava Flow', primary: '#cf1020', secondary: '#ff4500', bg: '#1a0000' },
+        { name: 'Forest Green', primary: '#228b22', secondary: '#32cd32', bg: '#0a1a0a' },
+        { name: 'Pink Panther', primary: '#ff1493', secondary: '#ff69b4', bg: '#1a0015' },
+        { name: 'Sky Blue', primary: '#87ceeb', secondary: '#4682b4', bg: '#0a1520' },
+        { name: 'Orange Crush', primary: '#ff8c00', secondary: '#ffa500', bg: '#1a0f00' },
+        { name: 'Grape Soda', primary: '#6a0dad', secondary: '#9b59b6', bg: '#0f0014' },
+        { name: 'Turquoise', primary: '#40e0d0', secondary: '#48d1cc', bg: '#0a1a1a' },
+        { name: 'Rose Gold', primary: '#b76e79', secondary: '#e8a87c', bg: '#1a100d' },
+        { name: 'Neon Green', primary: '#39ff14', secondary: '#00ff7f', bg: '#001a00' },
+        { name: 'Dark Mocha', primary: '#8b4513', secondary: '#d2691e', bg: '#1a0f05' },
+        { name: 'Steel Grey', primary: '#708090', secondary: '#778899', bg: '#0d0d0d' },
+        { name: 'Ruby Red', primary: '#e0115f', secondary: '#dc143c', bg: '#1a0008' },
+        { name: 'Candy Pop', primary: '#ff6ec7', secondary: '#7df9ff', bg: '#0f0020' },
+        { name: 'Matrix', primary: '#00ff41', secondary: '#008f11', bg: '#000000' },
+        { name: 'Vaporwave', primary: '#ff71ce', secondary: '#01cdfe', bg: '#0f0028' },
+        { name: 'Sunset Beach', primary: '#ff7e5f', secondary: '#feb47b', bg: '#1a0d05' },
+        { name: 'Deep Space', primary: '#2c3e50', secondary: '#3498db', bg: '#050510' },
+        { name: 'Tropical', primary: '#f9ca24', secondary: '#f0932b', bg: '#1a1500' },
+        { name: 'Winter Frost', primary: '#b3cde0', secondary: '#6497b1', bg: '#0a1020' },
+        { name: 'Neon Pink', primary: '#ff00ff', secondary: '#ff1493', bg: '#0f000f' },
+        { name: 'Olive Night', primary: '#6b8e23', secondary: '#9acd32', bg: '#0d1a05' },
+        { name: 'Bronze Age', primary: '#cd7f32', secondary: '#b8860b', bg: '#1a1005' },
+        { name: 'Aquamarine', primary: '#7fffd4', secondary: '#66cdaa', bg: '#0a1a15' },
+        { name: 'Retro Wave', primary: '#f706cf', secondary: '#fd1d1d', bg: '#0a0014' },
+        { name: 'Pastel Dream', primary: '#b5b9ff', secondary: '#ffb5e8', bg: '#0f0f1a' },
+        { name: 'Carbon Dark', primary: '#444444', secondary: '#666666', bg: '#0a0a0a' }
+    ];
+
+    function renderThemeGrid() {
+        var grid = document.getElementById('theme-grid');
+        if (!grid) return;
+        grid.innerHTML = THEME_PRESETS.map(function(t, i) {
+            return '<div class="theme-preset-card" onclick="applyThemePreset(' + i + ')" style="' +
+                'background:' + t.bg + ';' +
+                'border:1px solid ' + t.primary + '33;' +
+                'border-radius:10px;' +
+                'padding:10px;' +
+                'cursor:pointer;' +
+                'transition:all 0.3s ease;' +
+                'text-align:center;' +
+                '">' +
+                '<div style="display:flex;gap:4px;justify-content:center;margin-bottom:6px;">' +
+                    '<span style="width:20px;height:20px;border-radius:50%;background:' + t.primary + ';display:inline-block;"></span>' +
+                    '<span style="width:20px;height:20px;border-radius:50%;background:' + t.secondary + ';display:inline-block;"></span>' +
+                '</div>' +
+                '<span style="font-size:0.72rem;color:#ccc;">' + escapeAttr(t.name) + '</span>' +
+            '</div>';
+        }).join('');
+    }
+
+    function applyThemePreset(index) {
+        var theme = THEME_PRESETS[index];
+        if (!theme) return;
+        document.getElementById('cfg-cor-primaria').value = theme.primary;
+        document.getElementById('cfg-cor-secundaria').value = theme.secondary;
+        updateColorPreviews();
+        showToast('Tema "' + theme.name + '" aplicado! Clique Salvar para confirmar.', 'success');
     }
     </script>
 </body>
