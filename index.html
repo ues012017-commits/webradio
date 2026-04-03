@@ -824,6 +824,56 @@
         <i class="fa-solid fa-chevron-up"></i>
     </button>
 
+    <!-- Smoke/Fog Effect -->
+    <div class="smoke-container" id="smoke-container"></div>
+
+    <!-- Dancing Figure (reacts to music) -->
+    <div class="dancer-container" id="dancer-container">
+        <svg class="dancer-svg" id="dancer-svg" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
+            <!-- Head -->
+            <circle class="dancer-head" cx="100" cy="40" r="20" fill="none" stroke="url(#dancerGrad)" stroke-width="2"/>
+            <!-- Body -->
+            <line class="dancer-body" x1="100" y1="60" x2="100" y2="160" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Left Arm -->
+            <line class="dancer-arm-left" id="dancer-arm-left" x1="100" y1="90" x2="50" y2="130" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Right Arm -->
+            <line class="dancer-arm-right" id="dancer-arm-right" x1="100" y1="90" x2="150" y2="130" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Left Leg -->
+            <line class="dancer-leg-left" id="dancer-leg-left" x1="100" y1="160" x2="65" y2="250" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Right Leg -->
+            <line class="dancer-leg-right" id="dancer-leg-right" x1="100" y1="160" x2="135" y2="250" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Glow filter -->
+            <defs>
+                <linearGradient id="dancerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="var(--neon-cyan)"/>
+                    <stop offset="100%" stop-color="var(--neon-magenta)"/>
+                </linearGradient>
+                <filter id="dancerGlow">
+                    <feGaussianBlur stdDeviation="3" result="glow"/>
+                    <feMerge>
+                        <feMergeNode in="glow"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+        </svg>
+        <div class="dancer-floor-glow"></div>
+    </div>
+
+    <!-- Owner Banner -->
+    <div class="owner-banner" id="owner-banner">
+        <div class="owner-banner-content">
+            <div class="owner-avatar">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+            <div class="owner-info">
+                <span class="owner-label"><i class="fa-solid fa-star"></i> Fundadora &amp; CEO</span>
+                <h3 class="owner-name">Vanessa Corrêa</h3>
+                <p class="owner-tagline">Dona da Rádio VaneKonex</p>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
