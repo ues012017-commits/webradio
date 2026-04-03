@@ -356,6 +356,7 @@ function createStarField() {
 
 // Initialize all new features
 document.addEventListener('DOMContentLoaded', () => {
+    applyAdminConfig();
     initScrollReveal();
     animateCounters();
     initTypedText();
@@ -556,4 +557,232 @@ function initSmokeEffect() {
 
     // Keep generating
     setInterval(createSmokePuff, 700);
+}
+
+// =============================================
+// APPLY ADMIN CONFIGURATION FROM LOCALSTORAGE
+// =============================================
+function applyAdminConfig() {
+    const saved = localStorage.getItem('webradio_config');
+    if (!saved) return;
+
+    let config;
+    try {
+        config = JSON.parse(saved);
+    } catch (e) {
+        return;
+    }
+
+    // Page title
+    if (config.pageTitle) {
+        document.title = config.pageTitle;
+    }
+
+    // Radio name in header
+    if (config.radioName) {
+        const logoH1 = document.querySelector('.logo h1');
+        if (logoH1) {
+            logoH1.textContent = config.radioName;
+        }
+    }
+
+    // Logo
+    if (config.logoUrl) {
+        const logoIcon = document.querySelector('.logo .neon-icon');
+        if (logoIcon) {
+            const img = document.createElement('img');
+            img.src = config.logoUrl;
+            img.alt = config.radioName || 'Logo';
+            img.style.height = '40px';
+            img.style.width = 'auto';
+            img.style.borderRadius = '8px';
+            logoIcon.replaceWith(img);
+        }
+    }
+
+    // Hero description
+    if (config.radioSlogan) {
+        const heroDesc = document.querySelector('.hero-desc');
+        if (heroDesc) {
+            heroDesc.textContent = config.radioSlogan;
+        }
+    }
+
+    // About section
+    if (config.aboutText) {
+        const sobreTexto = document.querySelector('.sobre-texto p');
+        if (sobreTexto) {
+            sobreTexto.textContent = config.aboutText;
+        }
+    }
+
+    // Footer copyright
+    if (config.footerText) {
+        const footerCopyright = document.getElementById('footer-copyright');
+        if (footerCopyright) {
+            footerCopyright.textContent = config.footerText;
+        }
+    }
+
+    // Footer radio name
+    if (config.radioName) {
+        const footerTitle = document.querySelector('.footer-col h4');
+        if (footerTitle) {
+            footerTitle.innerHTML = '<i class="fa-solid fa-tower-broadcast"></i> ' + escapeHtmlConfig(config.radioName);
+        }
+    }
+
+    // Contact info
+    const contactItems = document.querySelectorAll('.contato-item');
+    if (contactItems.length >= 4) {
+        if (config.phone) {
+            contactItems[0].querySelector('p').textContent = config.phone;
+        }
+        if (config.whatsapp) {
+            contactItems[1].querySelector('p').textContent = config.whatsapp;
+        }
+        if (config.email) {
+            contactItems[2].querySelector('p').textContent = config.email;
+        }
+        if (config.address) {
+            contactItems[3].querySelector('p').textContent = config.address;
+        }
+    }
+
+    // Social links - header
+    const headerSocials = document.querySelectorAll('.social-icons a');
+    const socialMap = {
+        0: config.instagram,
+        1: config.whatsappLink,
+        2: config.facebook,
+        3: config.youtube,
+        4: config.tiktok
+    };
+    headerSocials.forEach((link, index) => {
+        if (socialMap[index]) {
+            link.href = socialMap[index];
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+        }
+    });
+
+    // Social links - contact section
+    const contactSocials = document.querySelectorAll('.contato-socials a');
+    const contactSocialMap = {
+        0: config.instagram,
+        1: config.facebook,
+        2: config.youtube,
+        3: config.twitter,
+        4: config.tiktok
+    };
+    contactSocials.forEach((link, index) => {
+        if (contactSocialMap[index]) {
+            link.href = contactSocialMap[index];
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+        }
+    });
+
+    // Colors
+    if (config.colorPrimary) {
+        document.documentElement.style.setProperty('--neon-cyan', config.colorPrimary);
+    }
+    if (config.colorSecondary) {
+        document.documentElement.style.setProperty('--neon-magenta', config.colorSecondary);
+    }
+    if (config.colorBg) {
+        document.documentElement.style.setProperty('--bg-color', config.colorBg);
+    }
+
+    // Programs
+    if (config.programs && config.programs.length > 0) {
+        const grid = document.querySelector('.programacao-grid');
+        if (grid) {
+            grid.innerHTML = '';
+            config.programs.forEach((prog, index) => {
+                const card = document.createElement('div');
+                card.className = 'programa-card' + (index === 0 ? ' active-program' : '');
+                card.innerHTML =
+                    '<div class="programa-horario">' + escapeHtmlConfig(prog.time) + '</div>' +
+                    '<div class="programa-icon"><i class="fa-solid fa-' + escapeHtmlConfig(prog.icon || 'music') + '"></i></div>' +
+                    '<h4>' + escapeHtmlConfig(prog.name) + '</h4>' +
+                    '<p>' + escapeHtmlConfig(prog.desc) + '</p>' +
+                    '<span class="programa-dj"><i class="fa-solid fa-microphone"></i> ' + escapeHtmlConfig(prog.dj) + '</span>' +
+                    (index === 0 ? '<span class="programa-badge ao-vivo-badge">NO AR</span>' : '');
+                grid.appendChild(card);
+            });
+        }
+
+        // Update footer programs list
+        const footerPrograms = document.querySelectorAll('.footer-col')[2];
+        if (footerPrograms) {
+            const ul = footerPrograms.querySelector('ul');
+            if (ul) {
+                ul.innerHTML = '';
+                config.programs.slice(0, 4).forEach(prog => {
+                    const li = document.createElement('li');
+                    li.innerHTML = '<a href="#programacao">' + escapeHtmlConfig(prog.name) + '</a>';
+                    ul.appendChild(li);
+                });
+            }
+        }
+    }
+
+    // Stream URL - override playlist loading
+    if (config.streamUrl) {
+        applyStreamUrl(config.streamUrl);
+    }
+
+    // WhatsApp number for music requests
+    if (config.whatsappNumber) {
+        applyWhatsAppNumber(config.whatsappNumber);
+    }
+}
+
+function escapeHtmlConfig(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+
+function applyStreamUrl(url) {
+    // Override the player to use stream instead of local files
+    const audioPlayer = document.getElementById('audio-player');
+    if (!audioPlayer) return;
+
+    audioPlayer.src = url;
+    const musicaEl = document.getElementById('nome-musica');
+    const cantorEl = document.getElementById('nome-cantor');
+    if (musicaEl) musicaEl.textContent = 'Rádio Ao Vivo';
+    if (cantorEl) cantorEl.textContent = 'Transmissão em Tempo Real';
+
+    // Hide next songs list since we're streaming
+    const nextList = document.getElementById('lista-proximas');
+    if (nextList) {
+        nextList.innerHTML = '<li>Transmissão ao vivo</li>';
+    }
+}
+
+function applyWhatsAppNumber(number) {
+    const formPedido = document.getElementById('form-pedido');
+    if (!formPedido) return;
+
+    // Remove existing handler and add new one
+    const newForm = formPedido.cloneNode(true);
+    formPedido.parentNode.replaceChild(newForm, formPedido);
+
+    newForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const nome = document.getElementById('pedido-nome').value;
+        const musica = document.getElementById('pedido-musica').value;
+        const artista = document.getElementById('pedido-artista').value;
+        const msg = document.getElementById('pedido-msg').value;
+        const config = JSON.parse(localStorage.getItem('webradio_config') || '{}');
+        const radioName = config.radioName || 'Web Rádio';
+
+        const whatsappMsg = '🎵 *Pedido Musical - ' + radioName + '*%0A%0A👤 Nome: ' + encodeURIComponent(nome) + '%0A🎶 Música: ' + encodeURIComponent(musica) + '%0A🎤 Artista: ' + encodeURIComponent(artista) + '%0A💬 Recado: ' + encodeURIComponent(msg);
+        window.open('https://wa.me/' + number + '?text=' + whatsappMsg, '_blank');
+        this.reset();
+    });
 }
