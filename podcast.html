@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podcasts | Rádio VaneKonex</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="particles" id="particles"></div>
+    <div class="cursor-glow" id="cursor-glow"></div>
+
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-tower-broadcast neon-icon pulse-anim"></i>
+            <h1>Vane<span>Konex</span> Rádio</h1>
+        </div>
+        <div class="live-indicator" id="live-indicator">
+            <span class="live-dot"></span>
+            <span class="live-text">ONLINE</span>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">Player</a>
+            <a href="index.html#programacao">Programação</a>
+            <a href="podcast.html" class="active-link"><i class="fa-solid fa-podcast"></i> Podcasts</a>
+            <a href="index.html#agentes">Agentes IA</a>
+            <a href="index.html#artistas">Artistas</a>
+            <a href="index.html#noticias">Notícias</a>
+            <a href="index.html#contato">Contato</a>
+        </nav>
+        <div class="social-icons">
+            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </header>
+
+    <!-- Podcast Hero -->
+    <section class="podcast-hero scroll-reveal">
+        <div class="podcast-hero-content">
+            <div class="podcast-hero-badge"><i class="fa-solid fa-podcast"></i> PODCASTS VANEKONEX</div>
+            <h2 class="podcast-hero-title">Nossos <span class="neon-text">Podcasts</span></h2>
+            <p class="podcast-hero-desc">Assista aos melhores episódios de podcast da VaneKonex. Conteúdo exclusivo sobre música, tecnologia e entretenimento.</p>
+            <div class="podcast-hero-stats">
+                <div class="podcast-stat">
+                    <i class="fa-solid fa-play-circle"></i>
+                    <span class="podcast-stat-num" id="podcast-ep-count">0</span>
+                    <span>Episódios</span>
+                </div>
+                <div class="podcast-stat">
+                    <i class="fa-solid fa-eye"></i>
+                    <span class="podcast-stat-num">52.3K</span>
+                    <span>Visualizações</span>
+                </div>
+                <div class="podcast-stat">
+                    <i class="fa-solid fa-heart"></i>
+                    <span class="podcast-stat-num">8.7K</span>
+                    <span>Curtidas</span>
+                </div>
+            </div>
+        </div>
+        <div class="podcast-hero-visual">
+            <div class="podcast-waveform">
+                <div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div>
+                <div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div>
+                <div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div>
+                <div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div>
+                <div class="pw-bar"></div><div class="pw-bar"></div><div class="pw-bar"></div>
+                <div class="pw-bar"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Podcast Grid -->
+    <section class="podcast-section">
+        <div class="section-header scroll-reveal">
+            <h2><i class="fa-solid fa-video"></i> Episódios</h2>
+            <p>Assista nossos episódios mais recentes</p>
+        </div>
+        <div class="podcast-grid" id="podcast-grid">
+            <!-- Videos are rendered by JS from localStorage config -->
+        </div>
+        <div class="podcast-empty" id="podcast-empty" style="display:none;">
+            <i class="fa-solid fa-film"></i>
+            <h3>Nenhum episódio cadastrado</h3>
+            <p>Use o painel admin abaixo para adicionar vídeos de podcast.</p>
+        </div>
+    </section>
+
+    <!-- Admin Panel -->
+    <section class="podcast-admin-section scroll-reveal" id="podcast-admin">
+        <div class="section-header">
+            <h2><i class="fa-solid fa-gear"></i> Painel Admin - Podcasts</h2>
+            <p>Gerencie os vídeos de podcast exibidos nesta página</p>
+        </div>
+        <div class="podcast-admin-panel glass-panel">
+            <div class="admin-auth" id="admin-auth">
+                <h3><i class="fa-solid fa-lock"></i> Acesso Restrito</h3>
+                <p>Digite a senha de administrador para gerenciar os podcasts.</p>
+                <div class="admin-login-form">
+                    <input type="password" id="admin-password" placeholder="Senha do admin" autocomplete="off">
+                    <button class="btn-neon" id="admin-login-btn"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
+                </div>
+                <small class="admin-hint">Senha padrão: admin123</small>
+            </div>
+
+            <div class="admin-content" id="admin-content" style="display:none;">
+                <div class="admin-toolbar">
+                    <h3><i class="fa-solid fa-list-check"></i> Gerenciar Episódios</h3>
+                    <button class="btn-neon-sm" id="admin-logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+                </div>
+
+                <div class="admin-add-form">
+                    <h4><i class="fa-solid fa-plus-circle"></i> Adicionar Novo Episódio</h4>
+                    <div class="admin-form-grid">
+                        <input type="text" id="ep-title" placeholder="Título do episódio" required>
+                        <input type="url" id="ep-url" placeholder="URL do vídeo (YouTube, Vimeo, etc.)" required>
+                        <input type="text" id="ep-desc" placeholder="Descrição curta">
+                        <select id="ep-category">
+                            <option value="Geral">Geral</option>
+                            <option value="Música">Música</option>
+                            <option value="Tecnologia">Tecnologia</option>
+                            <option value="Entrevista">Entrevista</option>
+                            <option value="Bastidores">Bastidores</option>
+                        </select>
+                    </div>
+                    <button class="btn-neon" id="ep-add-btn"><i class="fa-solid fa-plus"></i> Adicionar Episódio</button>
+                </div>
+
+                <div class="admin-list">
+                    <h4><i class="fa-solid fa-list"></i> Episódios Cadastrados</h4>
+                    <div id="admin-ep-list" class="admin-ep-list">
+                        <!-- filled by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4><i class="fa-solid fa-tower-broadcast"></i> VaneKonex Rádio</h4>
+                <p>Sua rádio online favorita. Música de qualidade 24 horas por dia, 7 dias por semana.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Links Rápidos</h4>
+                <ul>
+                    <li><a href="index.html">Player</a></li>
+                    <li><a href="index.html#programacao">Programação</a></li>
+                    <li><a href="podcast.html">Podcasts</a></li>
+                    <li><a href="index.html#noticias">Notícias</a></li>
+                    <li><a href="index.html#contato">Contato</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Programas</h4>
+                <ul>
+                    <li><a href="index.html">Bom Dia VaneKonex</a></li>
+                    <li><a href="index.html">Manhã Musical</a></li>
+                    <li><a href="index.html">Tarde Elétrica</a></li>
+                    <li><a href="index.html">Noite VaneKonex</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p>Receba novidades no seu e-mail</p>
+                <form class="newsletter-form" id="form-newsletter">
+                    <input type="email" placeholder="Seu e-mail" required>
+                    <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Rádio VaneKonex. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <button class="scroll-top" id="scroll-top" aria-label="Voltar ao topo">
+        <i class="fa-solid fa-chevron-up"></i>
+    </button>
+
+    <div class="smoke-container" id="smoke-container"></div>
+
+    <script src="podcast.js"></script>
+</body>
+</html>

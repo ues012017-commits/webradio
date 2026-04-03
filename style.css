@@ -1672,3 +1672,485 @@ footer {
 @media (max-width: 600px) {
     .smoke-container { height: 90px; }
 }
+
+/* =============================================
+   PODCAST PAGE STYLES
+   ============================================= */
+
+/* Active nav link */
+.nav-links .active-link {
+    color: var(--neon-cyan) !important;
+    text-shadow: 0 0 12px rgba(0, 243, 255, 0.5);
+}
+
+/* Podcast Hero */
+.podcast-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 80px 5% 60px;
+    min-height: 45vh;
+    gap: 40px;
+    position: relative;
+    overflow: hidden;
+}
+.podcast-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(108,92,231,0.15), transparent 70%);
+    border-radius: 50%;
+    animation: float 18s infinite alternate ease-in-out;
+    pointer-events: none;
+}
+.podcast-hero-content {
+    flex: 1;
+    max-width: 600px;
+}
+.podcast-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 243, 255, 0.1);
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: fadeInDown 0.8s ease;
+}
+.podcast-hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 15px;
+    animation: fadeInDown 1s ease;
+}
+.neon-text {
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-magenta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.podcast-hero-desc {
+    font-size: 1rem;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 30px;
+    animation: fadeInUp 1s ease 0.3s both;
+}
+.podcast-hero-stats {
+    display: flex;
+    gap: 30px;
+    animation: fadeInUp 1s ease 0.5s both;
+}
+.podcast-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.podcast-stat i {
+    font-size: 1.3rem;
+    color: var(--neon-cyan);
+}
+.podcast-stat-num {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+}
+.podcast-stat span:last-child {
+    font-size: 0.75rem;
+    color: #888;
+}
+
+/* Podcast Hero Waveform */
+.podcast-hero-visual {
+    flex: 0 0 auto;
+    animation: fadeInUp 1.2s ease 0.4s both;
+}
+.podcast-waveform {
+    display: flex;
+    align-items: flex-end;
+    gap: 5px;
+    height: 120px;
+}
+.pw-bar {
+    width: 8px;
+    background: linear-gradient(to top, var(--neon-cyan), var(--neon-magenta));
+    border-radius: 4px;
+    animation: podcastWave 1.2s ease-in-out infinite alternate;
+}
+.pw-bar:nth-child(1)  { height: 30px; animation-delay: 0s; }
+.pw-bar:nth-child(2)  { height: 50px; animation-delay: 0.1s; }
+.pw-bar:nth-child(3)  { height: 70px; animation-delay: 0.2s; }
+.pw-bar:nth-child(4)  { height: 90px; animation-delay: 0.3s; }
+.pw-bar:nth-child(5)  { height: 60px; animation-delay: 0.15s; }
+.pw-bar:nth-child(6)  { height: 100px; animation-delay: 0.25s; }
+.pw-bar:nth-child(7)  { height: 80px; animation-delay: 0.35s; }
+.pw-bar:nth-child(8)  { height: 45px; animation-delay: 0.05s; }
+.pw-bar:nth-child(9)  { height: 95px; animation-delay: 0.4s; }
+.pw-bar:nth-child(10) { height: 55px; animation-delay: 0.2s; }
+.pw-bar:nth-child(11) { height: 75px; animation-delay: 0.3s; }
+.pw-bar:nth-child(12) { height: 40px; animation-delay: 0.1s; }
+.pw-bar:nth-child(13) { height: 85px; animation-delay: 0.35s; }
+.pw-bar:nth-child(14) { height: 65px; animation-delay: 0.15s; }
+.pw-bar:nth-child(15) { height: 50px; animation-delay: 0.25s; }
+.pw-bar:nth-child(16) { height: 35px; animation-delay: 0.05s; }
+
+@keyframes podcastWave {
+    0% { transform: scaleY(0.4); }
+    100% { transform: scaleY(1); }
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Podcast Section */
+.podcast-section {
+    padding: 40px 5% 60px;
+}
+
+/* Podcast Grid */
+.podcast-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+/* Podcast Card */
+.podcast-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+    animation: fadeInUp 0.6s ease both;
+}
+.podcast-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 243, 255, 0.15), 0 0 30px rgba(0, 243, 255, 0.08);
+    border-color: rgba(0, 243, 255, 0.4);
+}
+
+.podcast-video-wrap {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 aspect ratio */
+    background: #0a0b10;
+}
+.podcast-video-wrap iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+.podcast-card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 2;
+}
+
+.podcast-card-info {
+    padding: 20px;
+}
+.podcast-card-info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+.podcast-card-info p {
+    font-size: 0.85rem;
+    color: #999;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+.podcast-card-meta {
+    display: flex;
+    gap: 16px;
+    font-size: 0.75rem;
+    color: #777;
+}
+.podcast-card-meta i {
+    color: var(--neon-cyan);
+    margin-right: 4px;
+}
+
+/* Podcast Empty State */
+.podcast-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: #666;
+}
+.podcast-empty i {
+    font-size: 3rem;
+    color: var(--neon-cyan);
+    margin-bottom: 16px;
+    opacity: 0.4;
+}
+.podcast-empty h3 {
+    font-size: 1.2rem;
+    color: #aaa;
+    margin-bottom: 8px;
+}
+
+/* Podcast Admin Section */
+.podcast-admin-section {
+    padding: 40px 5% 80px;
+}
+.podcast-admin-panel {
+    max-width: 800px;
+    margin: 30px auto 0;
+}
+
+/* Admin Auth */
+.admin-auth {
+    text-align: center;
+    padding: 30px 20px;
+}
+.admin-auth h3 {
+    font-size: 1.3rem;
+    color: var(--neon-cyan);
+    margin-bottom: 10px;
+}
+.admin-auth p {
+    color: #888;
+    margin-bottom: 20px;
+}
+.admin-login-form {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    max-width: 400px;
+    margin: 0 auto;
+}
+.admin-login-form input {
+    flex: 1;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 243, 255, 0.2);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.admin-login-form input:focus {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.15);
+}
+.admin-login-form input.input-error {
+    border-color: #ff4757;
+    box-shadow: 0 0 15px rgba(255, 71, 87, 0.2);
+    animation: shake 0.5s ease;
+}
+.admin-hint {
+    display: block;
+    margin-top: 12px;
+    color: #555;
+    font-size: 0.75rem;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
+}
+
+/* Admin Content */
+.admin-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+.admin-toolbar h3 {
+    font-size: 1.1rem;
+    color: var(--neon-cyan);
+}
+
+.btn-neon-sm {
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    color: #aaa;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-neon-sm:hover {
+    background: rgba(255, 71, 87, 0.15);
+    border-color: #ff4757;
+    color: #ff4757;
+}
+
+/* Admin Add Form */
+.admin-add-form {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(0, 243, 255, 0.1);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 30px;
+}
+.admin-add-form h4 {
+    color: #ddd;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+}
+.admin-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.admin-form-grid input,
+.admin-form-grid select {
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 243, 255, 0.15);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+.admin-form-grid input:focus,
+.admin-form-grid select:focus {
+    border-color: var(--neon-cyan);
+}
+.admin-form-grid select {
+    cursor: pointer;
+}
+.admin-form-grid select option {
+    background: #1a1a2e;
+    color: #fff;
+}
+
+/* Admin Episode List */
+.admin-ep-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.admin-list h4 {
+    color: #ddd;
+    margin-bottom: 14px;
+    font-size: 0.95rem;
+}
+.admin-ep-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 14px 18px;
+    transition: all 0.3s ease;
+}
+.admin-ep-item:hover {
+    background: rgba(0, 243, 255, 0.04);
+    border-color: rgba(0, 243, 255, 0.15);
+}
+.admin-ep-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.admin-ep-info strong {
+    font-size: 0.9rem;
+    color: #fff;
+}
+.admin-ep-info small {
+    font-size: 0.75rem;
+    color: #777;
+}
+.admin-no-eps {
+    text-align: center;
+    color: #555;
+    padding: 20px;
+}
+
+.btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+.btn-danger {
+    background: rgba(255, 71, 87, 0.1);
+    color: #ff4757;
+    border: 1px solid rgba(255, 71, 87, 0.2);
+}
+.btn-danger:hover {
+    background: rgba(255, 71, 87, 0.25);
+    transform: scale(1.1);
+}
+
+/* Podcast Page Responsive */
+@media (max-width: 768px) {
+    .podcast-hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 60px 5% 40px;
+    }
+    .podcast-hero-stats {
+        justify-content: center;
+    }
+    .podcast-hero-title {
+        font-size: 1.8rem;
+    }
+    .podcast-grid {
+        grid-template-columns: 1fr;
+    }
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .admin-login-form {
+        flex-direction: column;
+    }
+    .podcast-waveform {
+        height: 80px;
+    }
+    .pw-bar {
+        width: 6px;
+    }
+}
