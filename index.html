@@ -17,6 +17,9 @@
     <!-- Partículas flutuantes decorativas -->
     <div class="particles" id="particles"></div>
 
+    <!-- Star field -->
+    <div class="star-field" id="star-field"></div>
+
     <!-- Cursor glow trail -->
     <div class="cursor-glow" id="cursor-glow"></div>
 
@@ -33,7 +36,6 @@
         <nav class="nav-links">
             <a href="#player-section">Player</a>
             <a href="#programacao">Programação</a>
-            <a href="#agentes">Agentes IA</a>
             <a href="#noticias">Notícias</a>
             <a href="#parceiros">Parceiros</a>
             <a href="#contato">Contato</a>
@@ -263,165 +265,6 @@
             <div class="genero-card" style="--accent: #6c5ce7">
                 <i class="fa-solid fa-heart"></i>
                 <span>Romântico</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Agentes Inteligentes -->
-    <section id="agentes" class="section-full scroll-reveal">
-        <div class="section-header">
-            <h2><i class="fa-solid fa-microchip"></i> Agentes Inteligentes</h2>
-            <p>Tecnologia de IA trabalhando para melhorar sua experiência</p>
-        </div>
-        <div class="agentes-grid">
-            <div class="agente-card" data-tilt>
-                <div class="agente-icon-wrap">
-                    <div class="agente-icon pulse-ring">
-                        <i class="fa-solid fa-robot"></i>
-                    </div>
-                    <span class="agente-status online">Online</span>
-                </div>
-                <h4>DJ Virtual IA</h4>
-                <p>Nosso DJ com inteligência artificial seleciona as melhores músicas com base no horário, humor e preferências dos ouvintes em tempo real.</p>
-                <div class="agente-stats">
-                    <span><i class="fa-solid fa-music"></i> 2.450 seleções hoje</span>
-                    <span><i class="fa-solid fa-chart-line"></i> 98% aprovação</span>
-                </div>
-                <div class="agente-activity">
-                    <div class="activity-bar">
-                        <div class="activity-fill" style="width: 92%"></div>
-                    </div>
-                    <small>Atividade: Muito Alta</small>
-                </div>
-            </div>
-            <div class="agente-card" data-tilt>
-                <div class="agente-icon-wrap">
-                    <div class="agente-icon pulse-ring" style="--agent-color: #ff007f">
-                        <i class="fa-solid fa-brain"></i>
-                    </div>
-                    <span class="agente-status online">Online</span>
-                </div>
-                <h4>Recomendador Musical</h4>
-                <p>Analisa seus gostos musicais e sugere novas músicas e artistas que você vai adorar. Aprende a cada interação.</p>
-                <div class="agente-stats">
-                    <span><i class="fa-solid fa-thumbs-up"></i> 15.320 recomendações</span>
-                    <span><i class="fa-solid fa-heart"></i> 94% acertos</span>
-                </div>
-                <div class="agente-activity">
-                    <div class="activity-bar">
-                        <div class="activity-fill" style="width: 87%; background: linear-gradient(90deg, #ff007f, #ff6b9d)"></div>
-                    </div>
-                    <small>Atividade: Alta</small>
-                </div>
-            </div>
-            <div class="agente-card" data-tilt>
-                <div class="agente-icon-wrap">
-                    <div class="agente-icon pulse-ring" style="--agent-color: #ffe66d">
-                        <i class="fa-solid fa-shield-halved"></i>
-                    </div>
-                    <span class="agente-status online">Online</span>
-                </div>
-                <h4>Moderador de Conteúdo</h4>
-                <p>Garante a qualidade do conteúdo em tempo real, filtrando e moderando pedidos musicais e mensagens automaticamente.</p>
-                <div class="agente-stats">
-                    <span><i class="fa-solid fa-check-circle"></i> 8.740 moderações</span>
-                    <span><i class="fa-solid fa-bolt"></i> 0.3s resposta</span>
-                </div>
-                <div class="agente-activity">
-                    <div class="activity-bar">
-                        <div class="activity-fill" style="width: 65%; background: linear-gradient(90deg, #ffe66d, #ffa502)"></div>
-                    </div>
-                    <small>Atividade: Moderada</small>
-                </div>
-            </div>
-            <div class="agente-card" data-tilt>
-                <div class="agente-icon-wrap">
-                    <div class="agente-icon pulse-ring" style="--agent-color: #a29bfe">
-                        <i class="fa-solid fa-chart-bar"></i>
-                    </div>
-                    <span class="agente-status online">Online</span>
-                </div>
-                <h4>Analista de Tendências</h4>
-                <p>Monitora tendências musicais em tempo real, identificando hits virais e novos artistas em ascensão antes de todo mundo.</p>
-                <div class="agente-stats">
-                    <span><i class="fa-solid fa-arrow-trend-up"></i> 342 trends</span>
-                    <span><i class="fa-solid fa-globe"></i> 12 países</span>
-                </div>
-                <div class="agente-activity">
-                    <div class="activity-bar">
-                        <div class="activity-fill" style="width: 78%; background: linear-gradient(90deg, #a29bfe, #6c5ce7)"></div>
-                    </div>
-                    <small>Atividade: Alta</small>
-                </div>
-            </div>
-            <div class="agente-card" data-tilt>
-                <div class="agente-icon-wrap">
-                    <div class="agente-icon pulse-ring" style="--agent-color: #4ecdc4">
-                        <i class="fa-solid fa-headset"></i>
-                    </div>
-                    <span class="agente-status online">Online</span>
-                </div>
-                <h4>Atendente Virtual</h4>
-                <p>Atendimento 24h com IA avançada. Responde dúvidas, processa pedidos musicais e gerencia interações com ouvintes.</p>
-                <div class="agente-stats">
-                    <span><i class="fa-solid fa-comments"></i> 5.280 chats</span>
-                    <span><i class="fa-solid fa-star"></i> 4.9/5 nota</span>
-                </div>
-                <div class="agente-activity">
-                    <div class="activity-bar">
-                        <div class="activity-fill" style="width: 95%; background: linear-gradient(90deg, #4ecdc4, #00b894)"></div>
-                    </div>
-                    <small>Atividade: Muito Alta</small>
-                </div>
-            </div>
-            <div class="agente-card" data-tilt>
-                <div class="agente-icon-wrap">
-                    <div class="agente-icon pulse-ring" style="--agent-color: #fd79a8">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </div>
-                    <span class="agente-status online">Online</span>
-                </div>
-                <h4>Mixer Automático</h4>
-                <p>Cria transições perfeitas entre músicas usando IA, garantindo que a programação flua de maneira natural e envolvente.</p>
-                <div class="agente-stats">
-                    <span><i class="fa-solid fa-shuffle"></i> 1.890 mixagens</span>
-                    <span><i class="fa-solid fa-fire"></i> 97% qualidade</span>
-                </div>
-                <div class="agente-activity">
-                    <div class="activity-bar">
-                        <div class="activity-fill" style="width: 88%; background: linear-gradient(90deg, #fd79a8, #e84393)"></div>
-                    </div>
-                    <small>Atividade: Alta</small>
-                </div>
-            </div>
-        </div>
-        <!-- Agent Network Visualization -->
-        <div class="agent-network-banner">
-            <div class="network-visual">
-                <div class="network-node n1"><i class="fa-solid fa-robot"></i></div>
-                <div class="network-node n2"><i class="fa-solid fa-brain"></i></div>
-                <div class="network-node n3"><i class="fa-solid fa-shield-halved"></i></div>
-                <div class="network-node n4"><i class="fa-solid fa-chart-bar"></i></div>
-                <div class="network-node n5"><i class="fa-solid fa-headset"></i></div>
-                <div class="network-node n6"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                <svg class="network-lines" viewBox="0 0 600 120" preserveAspectRatio="none">
-                    <line x1="50" y1="60" x2="150" y2="40" stroke="rgba(0,243,255,0.3)" stroke-width="1"/>
-                    <line x1="150" y1="40" x2="250" y2="70" stroke="rgba(255,0,127,0.3)" stroke-width="1"/>
-                    <line x1="250" y1="70" x2="350" y2="50" stroke="rgba(255,230,109,0.3)" stroke-width="1"/>
-                    <line x1="350" y1="50" x2="450" y2="65" stroke="rgba(162,155,254,0.3)" stroke-width="1"/>
-                    <line x1="450" y1="65" x2="550" y2="45" stroke="rgba(78,205,196,0.3)" stroke-width="1"/>
-                    <line x1="50" y1="60" x2="350" y2="50" stroke="rgba(0,243,255,0.15)" stroke-width="1" stroke-dasharray="4"/>
-                    <line x1="150" y1="40" x2="450" y2="65" stroke="rgba(255,0,127,0.15)" stroke-width="1" stroke-dasharray="4"/>
-                </svg>
-            </div>
-            <div class="network-info">
-                <h3><i class="fa-solid fa-network-wired"></i> Rede Neural Ativa</h3>
-                <p>Todos os 6 agentes inteligentes estão conectados e trabalhando em sincronia para entregar a melhor experiência musical.</p>
-                <div class="network-stats-row">
-                    <div class="net-stat"><span class="net-stat-num">99.9%</span><span>Uptime</span></div>
-                    <div class="net-stat"><span class="net-stat-num">0.2s</span><span>Latência</span></div>
-                    <div class="net-stat"><span class="net-stat-num">6/6</span><span>Ativos</span></div>
-                </div>
             </div>
         </div>
     </section>
@@ -783,42 +626,6 @@
         </div>
     </footer>
 
-    <!-- Chatbot / Agente Inteligente -->
-    <div class="chatbot-toggle" id="chatbot-toggle">
-        <i class="fa-solid fa-robot"></i>
-        <span class="chat-notification">1</span>
-    </div>
-    <div class="chatbot-container" id="chatbot-container">
-        <div class="chatbot-header">
-            <div class="chatbot-avatar">
-                <i class="fa-solid fa-robot"></i>
-            </div>
-            <div>
-                <h4>VaneBot <span class="bot-status">Online</span></h4>
-                <small>Assistente Virtual da VaneKonex</small>
-            </div>
-            <button class="chatbot-close" id="chatbot-close" aria-label="Fechar chat"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="chatbot-messages" id="chatbot-messages">
-            <div class="chat-message bot-message">
-                <div class="message-avatar"><i class="fa-solid fa-robot"></i></div>
-                <div class="message-content">
-                    <p>Olá! 👋 Eu sou o <strong>VaneBot</strong>, seu assistente virtual! Como posso te ajudar?</p>
-                    <div class="quick-replies">
-                        <button class="quick-reply" data-msg="programação">📻 Programação</button>
-                        <button class="quick-reply" data-msg="pedir música">🎵 Pedir Música</button>
-                        <button class="quick-reply" data-msg="promoções">🎁 Promoções</button>
-                        <button class="quick-reply" data-msg="contato">📞 Contato</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="chatbot-input">
-            <input type="text" id="chatbot-input-field" placeholder="Digite sua mensagem..." aria-label="Mensagem">
-            <button id="chatbot-send" aria-label="Enviar"><i class="fa-solid fa-paper-plane"></i></button>
-        </div>
-    </div>
-
     <!-- Scroll to top button -->
     <button class="scroll-top" id="scroll-top" aria-label="Voltar ao topo">
         <i class="fa-solid fa-chevron-up"></i>
@@ -826,53 +633,6 @@
 
     <!-- Smoke/Fog Effect -->
     <div class="smoke-container" id="smoke-container"></div>
-
-    <!-- Dancing Figure (reacts to music) -->
-    <div class="dancer-container" id="dancer-container">
-        <svg class="dancer-svg" id="dancer-svg" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
-            <!-- Head -->
-            <circle class="dancer-head" cx="100" cy="40" r="20" fill="none" stroke="url(#dancerGrad)" stroke-width="2"/>
-            <!-- Body -->
-            <line class="dancer-body" x1="100" y1="60" x2="100" y2="160" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- Left Arm -->
-            <line class="dancer-arm-left" id="dancer-arm-left" x1="100" y1="90" x2="50" y2="130" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- Right Arm -->
-            <line class="dancer-arm-right" id="dancer-arm-right" x1="100" y1="90" x2="150" y2="130" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- Left Leg -->
-            <line class="dancer-leg-left" id="dancer-leg-left" x1="100" y1="160" x2="65" y2="250" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- Right Leg -->
-            <line class="dancer-leg-right" id="dancer-leg-right" x1="100" y1="160" x2="135" y2="250" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- Glow filter -->
-            <defs>
-                <linearGradient id="dancerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="var(--neon-cyan)"/>
-                    <stop offset="100%" stop-color="var(--neon-magenta)"/>
-                </linearGradient>
-                <filter id="dancerGlow">
-                    <feGaussianBlur stdDeviation="3" result="glow"/>
-                    <feMerge>
-                        <feMergeNode in="glow"/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                </filter>
-            </defs>
-        </svg>
-        <div class="dancer-floor-glow"></div>
-    </div>
-
-    <!-- Owner Banner -->
-    <div class="owner-banner" id="owner-banner">
-        <div class="owner-banner-content">
-            <div class="owner-avatar">
-                <i class="fa-solid fa-crown"></i>
-            </div>
-            <div class="owner-info">
-                <span class="owner-label"><i class="fa-solid fa-star"></i> Fundadora &amp; CEO</span>
-                <h3 class="owner-name">Vanessa Corrêa</h3>
-                <p class="owner-tagline">Dona da Rádio VaneKonex</p>
-            </div>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>

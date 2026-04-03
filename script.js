@@ -220,7 +220,7 @@ function createParticles() {
     const container = document.getElementById('particles');
     if (!container) return;
 
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 80; i++) {
         const particle = document.createElement('div');
         particle.classList.add('particle');
         particle.style.left = Math.random() * 100 + '%';
@@ -228,6 +228,13 @@ function createParticles() {
         particle.style.animationDuration = (4 + Math.random() * 4) + 's';
         if (Math.random() > 0.5) {
             particle.style.background = '#ff007f';
+        }
+        // Star-like particles
+        if (Math.random() > 0.7) {
+            particle.style.width = '2px';
+            particle.style.height = '2px';
+            particle.style.boxShadow = '0 0 6px 2px rgba(255, 255, 255, 0.8)';
+            particle.style.background = '#fff';
         }
         container.appendChild(particle);
     }
@@ -276,134 +283,6 @@ function initMobileMenu() {
     navLinks.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
-        });
-    });
-}
-
-// Chatbot
-function initChatbot() {
-    const toggle = document.getElementById('chatbot-toggle');
-    const container = document.getElementById('chatbot-container');
-    const closeBtn = document.getElementById('chatbot-close');
-    const inputField = document.getElementById('chatbot-input-field');
-    const sendBtn = document.getElementById('chatbot-send');
-    const messagesContainer = document.getElementById('chatbot-messages');
-    const notification = document.querySelector('.chat-notification');
-
-    if (!toggle || !container) return;
-
-    toggle.addEventListener('click', () => {
-        container.classList.toggle('active');
-        if (container.classList.contains('active') && notification) {
-            notification.style.display = 'none';
-        }
-    });
-
-    closeBtn.addEventListener('click', () => {
-        container.classList.remove('active');
-    });
-
-    function escapeHtml(str) {
-        const div = document.createElement('div');
-        div.appendChild(document.createTextNode(str));
-        return div.innerHTML;
-    }
-
-    function addMessage(text, isUser) {
-        const msg = document.createElement('div');
-        msg.className = 'chat-message ' + (isUser ? 'user-message' : 'bot-message');
-
-        const avatar = document.createElement('div');
-        avatar.className = 'message-avatar';
-        avatar.innerHTML = '<i class="fa-solid fa-' + (isUser ? 'user' : 'robot') + '"></i>';
-
-        const content = document.createElement('div');
-        content.className = 'message-content';
-        const p = document.createElement('p');
-
-        if (isUser) {
-            p.textContent = text;
-        } else {
-            p.innerHTML = text;
-        }
-
-        content.appendChild(p);
-        msg.appendChild(avatar);
-        msg.appendChild(content);
-        messagesContainer.appendChild(msg);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }
-
-    function showTyping() {
-        const typing = document.createElement('div');
-        typing.className = 'chat-message bot-message typing-msg';
-        typing.innerHTML = `
-            <div class="message-avatar"><i class="fa-solid fa-robot"></i></div>
-            <div class="message-content"><div class="typing-indicator"><span></span><span></span><span></span></div></div>
-        `;
-        messagesContainer.appendChild(typing);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        return typing;
-    }
-
-    function getBotResponse(message) {
-        const msg = message.toLowerCase().trim();
-
-        if (msg.includes('programação') || msg.includes('programa')) {
-            return '📻 Nossa programação é incrível! Temos:\n\n🌅 06h-09h: Bom Dia VaneKonex\n🎵 09h-12h: Manhã Musical\n🍽️ 12h-14h: Hora do Almoço\n⚡ 14h-17h: Tarde Elétrica\n🎸 17h-20h: Sertanejo & Forró\n🌙 20h-00h: Noite VaneKonex\n\nQual programa você mais curte? 😊';
-        }
-        if (msg.includes('pedir') || msg.includes('música') || msg.includes('musica') || msg.includes('pedido')) {
-            return '🎵 Para pedir sua música, você pode:\n\n1️⃣ Usar o formulário "Peça Sua Música" na página\n2️⃣ Mandar mensagem no WhatsApp: (11) 99999-9999\n3️⃣ Me dizer aqui o nome da música e artista!\n\nQual música você quer ouvir? 🎶';
-        }
-        if (msg.includes('promoção') || msg.includes('promoções') || msg.includes('promo')) {
-            return '🎁 Temos promoções incríveis!\n\n🎫 Concorra a ingressos para shows\n📱 Ganhe um celular novo\n🎧 Kits de fones premium\n\nPara participar, ouça a rádio e fique ligado nos programas! A senha da promoção pode ser dita a qualquer momento! 🤩';
-        }
-        if (msg.includes('contato') || msg.includes('telefone') || msg.includes('whatsapp')) {
-            return '📞 Nossos contatos:\n\n📱 WhatsApp: (11) 99999-9999\n📧 E-mail: contato@vanekonex.com.br\n📸 Instagram: @vanekonex\n📍 Rua da Música, 123 - Centro\n\nEstamos sempre disponíveis para você! 💙';
-        }
-        if (msg.includes('olá') || msg.includes('oi') || msg.includes('hey') || msg.includes('eae') || msg.includes('bom dia') || msg.includes('boa tarde') || msg.includes('boa noite')) {
-            return 'Olá! 😄 Que bom ter você aqui na VaneKonex! Como posso te ajudar? Posso falar sobre:\n\n📻 Programação\n🎵 Pedidos musicais\n🎁 Promoções\n📞 Contato\n\nÉ só perguntar! 🎧';
-        }
-        if (msg.includes('app') || msg.includes('aplicativo') || msg.includes('download')) {
-            return '📱 Nosso app está quase pronto! Em breve você poderá baixar na Google Play e App Store. Fique ligado nas nossas redes sociais para ser o primeiro a saber! 🚀';
-        }
-        if (msg.includes('locutor') || msg.includes('dj') || msg.includes('equipe')) {
-            return '🎙️ Nossa equipe de DJs é sensacional!\n\n👨‍🎤 DJ Carlos - Bom Dia VaneKonex\n👩‍🎤 DJ Ana - Manhã Musical\n🎤 DJ Roberto - Hora do Almoço\n🎧 DJ Max - Tarde Elétrica\n👩‍🎤 DJ Paula - Sertanejo & Forró\n🎤 DJ Léo - Noite VaneKonex\n\nTodos super talentosos! 🌟';
-        }
-        if (msg.includes('obrigado') || msg.includes('valeu') || msg.includes('thanks')) {
-            return 'Por nada! 😊 Estou sempre aqui para ajudar. Curta a VaneKonex e não esqueça de compartilhar com os amigos! 🎶💙';
-        }
-
-        return 'Que legal sua mensagem! 😊 Posso te ajudar com informações sobre:\n\n📻 Programação da rádio\n🎵 Pedidos musicais\n🎁 Promoções ativas\n📞 Contato\n🎙️ Nossos DJs\n📱 Nosso App\n\nÉ só perguntar! 🎧';
-    }
-
-    function handleSend() {
-        const text = inputField.value.trim();
-        if (!text) return;
-
-        addMessage(text, true);
-        inputField.value = '';
-
-        const typingEl = showTyping();
-
-        setTimeout(() => {
-            typingEl.remove();
-            const response = getBotResponse(text);
-            addMessage(response.replace(/\n/g, '<br>'), false);
-        }, 1000 + Math.random() * 1000);
-    }
-
-    sendBtn.addEventListener('click', handleSend);
-    inputField.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleSend();
-    });
-
-    // Quick replies
-    document.querySelectorAll('.quick-reply').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const msg = this.getAttribute('data-msg');
-            inputField.value = msg;
-            handleSend();
         });
     });
 }
@@ -457,6 +336,24 @@ function initSmoothScroll() {
     });
 }
 
+// Star Field
+function createStarField() {
+    const container = document.getElementById('star-field');
+    if (!container) return;
+    for (let i = 0; i < 120; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        const size = 1 + Math.random() * 3;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        star.style.animationDelay = Math.random() * 4 + 's';
+        star.style.animationDuration = (2 + Math.random() * 3) + 's';
+        container.appendChild(star);
+    }
+}
+
 // Initialize all new features
 document.addEventListener('DOMContentLoaded', () => {
     initScrollReveal();
@@ -466,15 +363,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initStickyHeader();
     initScrollTop();
     initMobileMenu();
-    initChatbot();
     initForms();
     initSmoothScroll();
     initCursorGlow();
     initAudioVisualizer();
     initListenerCounter();
-    initTiltCards();
     initSmokeEffect();
-    initDancer();
+    createStarField();
 });
 
 // =============================================
@@ -501,7 +396,7 @@ function initCursorGlow() {
 // =============================================
 // AUDIO VISUALIZER (Web Audio API)
 // =============================================
-// Shared audio analysis state (used by visualizer + dancer)
+// Shared audio analysis state (used by visualizer)
 let sharedAudioContext = null;
 let sharedAnalyser = null;
 let sharedDataArray = null;
@@ -623,32 +518,6 @@ function initListenerCounter() {
 }
 
 // =============================================
-// 3D TILT EFFECT ON CARDS
-// =============================================
-function initTiltCards() {
-    if ('ontouchstart' in window) return; // Skip on mobile
-
-    const cards = document.querySelectorAll('[data-tilt]');
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = ((y - centerY) / centerY) * -6;
-            const rotateY = ((x - centerX) / centerX) * 6;
-
-            card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.02)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0) scale(1)';
-        });
-    });
-}
-
-// =============================================
 // SMOKE / FOG EFFECT
 // =============================================
 function initSmokeEffect() {
@@ -658,7 +527,7 @@ function initSmokeEffect() {
     function createSmokePuff() {
         const puff = document.createElement('div');
         puff.classList.add('smoke-puff');
-        const size = 60 + Math.random() * 120;
+        const size = 80 + Math.random() * 200;
         puff.style.width = size + 'px';
         puff.style.height = size + 'px';
         puff.style.left = Math.random() * 100 + '%';
@@ -681,136 +550,10 @@ function initSmokeEffect() {
     }
 
     // Create initial puffs
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 15; i++) {
         setTimeout(() => createSmokePuff(), i * 600);
     }
 
     // Keep generating
-    setInterval(createSmokePuff, 1200);
-}
-
-// =============================================
-// DANCING FIGURE (reacts to audio)
-// =============================================
-function initDancer() {
-    const svg = document.getElementById('dancer-svg');
-    if (!svg) return;
-
-    const armLeft = document.getElementById('dancer-arm-left');
-    const armRight = document.getElementById('dancer-arm-right');
-    const legLeft = document.getElementById('dancer-leg-left');
-    const legRight = document.getElementById('dancer-leg-right');
-    const head = svg.querySelector('.dancer-head');
-    const body = svg.querySelector('.dancer-body');
-
-    if (!armLeft || !armRight || !legLeft || !legRight) return;
-
-    // Start with idle CSS animation
-    svg.classList.add('idle');
-
-    function animateDancer() {
-        requestAnimationFrame(animateDancer);
-
-        // Get audio energy
-        let bass = 0;
-        let mid = 0;
-        let high = 0;
-        let energy = 0;
-
-        if (sharedAudioConnected && sharedAnalyser && sharedDataArray && tocando) {
-            sharedAnalyser.getByteFrequencyData(sharedDataArray);
-
-            // Bass (low frequencies)
-            const bassEnd = Math.floor(sharedDataArray.length * 0.15);
-            for (let i = 0; i < bassEnd; i++) {
-                bass += sharedDataArray[i];
-            }
-            bass = bass / (bassEnd * 255);
-
-            // Mid frequencies
-            const midStart = Math.floor(sharedDataArray.length * 0.15);
-            const midEnd = Math.floor(sharedDataArray.length * 0.5);
-            for (let i = midStart; i < midEnd; i++) {
-                mid += sharedDataArray[i];
-            }
-            mid = mid / ((midEnd - midStart) * 255);
-
-            // High frequencies
-            const highStart = Math.floor(sharedDataArray.length * 0.5);
-            for (let i = highStart; i < sharedDataArray.length; i++) {
-                high += sharedDataArray[i];
-            }
-            high = high / ((sharedDataArray.length - highStart) * 255);
-
-            energy = (bass + mid + high) / 3;
-
-            // Remove idle CSS animations when reacting to audio
-            svg.classList.remove('idle');
-        } else if (tocando) {
-            // Fallback: simulate energy with sine wave
-            const t = Date.now() / 1000;
-            bass = 0.3 + Math.sin(t * 3) * 0.2;
-            mid = 0.3 + Math.sin(t * 4 + 1) * 0.2;
-            high = 0.2 + Math.sin(t * 5 + 2) * 0.15;
-            energy = (bass + mid + high) / 3;
-            svg.classList.remove('idle');
-        } else {
-            // Not playing - use idle CSS animations
-            svg.classList.add('idle');
-            return;
-        }
-
-        // Dancer moves based on audio
-        const t = Date.now() / 1000;
-
-        // Arms react to mid/high frequencies
-        const armAngleL = -30 - mid * 120 + Math.sin(t * 6) * high * 40;
-        const armAngleR = 30 + mid * 120 - Math.sin(t * 6 + Math.PI) * high * 40;
-        const armEndLeftX = 100 + Math.cos(Math.PI / 2 + (armAngleL * Math.PI / 180)) * 60;
-        const armEndLeftY = 90 + Math.sin(Math.PI / 2 + (armAngleL * Math.PI / 180)) * 60;
-        const armEndRightX = 100 + Math.cos(Math.PI / 2 - (armAngleR * Math.PI / 180)) * 60;
-        const armEndRightY = 90 + Math.sin(Math.PI / 2 - (armAngleR * Math.PI / 180)) * 60;
-
-        armLeft.setAttribute('x2', armEndLeftX);
-        armLeft.setAttribute('y2', armEndLeftY);
-        armRight.setAttribute('x2', armEndRightX);
-        armRight.setAttribute('y2', armEndRightY);
-
-        // Legs react to bass (dance steps)
-        const legSwing = bass * 35 + 10;
-        const legPhase = Math.sin(t * 4 + bass * 2);
-        const legLeftX = 100 - 35 + legPhase * legSwing;
-        const legRightX = 100 + 35 - legPhase * legSwing;
-        const legLeftY = 250 - bass * 20;
-        const legRightY = 250 - bass * 10;
-
-        legLeft.setAttribute('x2', legLeftX);
-        legLeft.setAttribute('y2', legLeftY);
-        legRight.setAttribute('x2', legRightX);
-        legRight.setAttribute('y2', legRightY);
-
-        // Body bounces with bass
-        const bodyBounce = bass * 12;
-        body.setAttribute('y1', 60 - bodyBounce);
-        body.setAttribute('y2', 160 - bodyBounce);
-        armLeft.setAttribute('y1', 90 - bodyBounce);
-        armRight.setAttribute('y1', 90 - bodyBounce);
-        legLeft.setAttribute('y1', 160 - bodyBounce);
-        legRight.setAttribute('y1', 160 - bodyBounce);
-
-        // Head bobbing
-        const headBob = Math.sin(t * 5) * high * 8;
-        const headBounce = bass * 12;
-        head.setAttribute('cx', 100 + headBob);
-        head.setAttribute('cy', 40 - headBounce);
-
-        // Floor glow intensity
-        const floorGlow = svg.parentElement.querySelector('.dancer-floor-glow');
-        if (floorGlow) {
-            const glowOpacity = 0.3 + energy * 0.7;
-            floorGlow.style.opacity = glowOpacity;
-        }
-    }
-
-    animateDancer();
+    setInterval(createSmokePuff, 700);
 }
