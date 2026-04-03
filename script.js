@@ -510,6 +510,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initListenerCounter();
     initTiltCards();
     initSmokeEffect();
+    loadSiteConfig();
+    initVirtualDJCheck();
 });
 
 // =============================================
@@ -724,4 +726,126 @@ function initSmokeEffect() {
 
     // Keep generating
     setInterval(createSmokePuff, 1200);
+}
+
+// =============================================
+// LOAD SITE CONFIG FROM API / LOCALSTORAGE
+// =============================================
+function loadSiteConfig() {
+    fetch('api.php')
+        .then(res => res.json())
+        .then(config => {
+            applySiteConfig(config);
+            localStorage.setItem('vanekonex_config', JSON.stringify(config));
+        })
+        .catch(() => {
+            const cached = localStorage.getItem('vanekonex_config');
+            if (cached) {
+                try { applySiteConfig(JSON.parse(cached)); } catch(e) {}
+            }
+        });
+}
+
+function applySiteConfig(cfg) {
+    if (!cfg) return;
+
+    // Contact info
+    const contatoItems = document.querySelectorAll('.contato-item');
+    if (contatoItems.length >= 4) {
+        if (cfg.telefone) contatoItems[0].querySelector('p').textContent = cfg.telefone;
+        if (cfg.whatsapp) contatoItems[1].querySelector('p').textContent = cfg.whatsapp;
+        if (cfg.email) contatoItems[2].querySelector('p').textContent = cfg.email;
+        if (cfg.endereco) contatoItems[3].querySelector('p').textContent = cfg.endereco;
+    }
+
+    // Header social links
+    const headerSocials = document.querySelectorAll('header .social-icons a');
+    const socialMap = [
+        { key: 'instagram', icon: 'instagram' },
+        { key: 'whatsapp_link', icon: 'whatsapp' },
+        { key: 'facebook', icon: 'facebook' },
+        { key: 'youtube', icon: 'youtube' },
+        { key: 'tiktok', icon: 'tiktok' }
+    ];
+    headerSocials.forEach((a, i) => {
+        if (socialMap[i] && cfg[socialMap[i].key]) {
+            a.href = cfg[socialMap[i].key];
+        }
+    });
+
+    // Contact section socials
+    const contatoSocials = document.querySelectorAll('.contato-socials a');
+    const contatoSocialMap = ['instagram', 'facebook', 'youtube', 'twitter', 'tiktok'];
+    contatoSocials.forEach((a, i) => {
+        if (contatoSocialMap[i] && cfg[contatoSocialMap[i]]) {
+            a.href = cfg[contatoSocialMap[i]];
+        }
+    });
+
+    // Locutora info
+    const locutoraName = document.getElementById('locutora-name');
+    const locutoraPhoto = document.getElementById('locutora-photo');
+    if (locutoraName && cfg.locutora_nome) locutoraName.textContent = cfg.locutora_nome;
+    if (locutoraPhoto && cfg.locutora_foto) locutoraPhoto.src = cfg.locutora_foto;
+
+    const locutoraSocials = {
+        'locutora-instagram': cfg.locutora_instagram,
+        'locutora-facebook': cfg.locutora_facebook,
+        'locutora-twitter': cfg.locutora_twitter,
+        'locutora-tiktok': cfg.locutora_tiktok
+    };
+    document.querySelectorAll('.locutora-social-link').forEach(a => {
+        const key = a.getAttribute('data-social');
+        if (key && locutoraSocials[key]) {
+            a.href = locutoraSocials[key];
+        }
+    });
+
+    // VDJ stream URL
+    if (cfg.vdj_stream_url) {
+        localStorage.setItem('vdj_stream_url', cfg.vdj_stream_url);
+    }
+    if (cfg.vdj_check_interval) {
+        localStorage.setItem('vdj_check_interval', cfg.vdj_check_interval);
+    }
+}
+
+// =============================================
+// VIRTUAL DJ STREAM CHECK
+// =============================================
+let vdjCheckTimer = null;
+
+function initVirtualDJCheck() {
+    checkVDJStream();
+    const interval = parseInt(localStorage.getItem('vdj_check_interval')) || 30;
+    vdjCheckTimer = setInterval(checkVDJStream, interval * 1000);
+}
+
+function checkVDJStream() {
+    const streamUrl = localStorage.getItem('vdj_stream_url');
+    const vdjDot = document.getElementById('vdj-dot');
+    const vdjText = document.getElementById('vdj-text');
+    const liveIndicator = document.getElementById('live-indicator');
+    const liveText = liveIndicator ? liveIndicator.querySelector('.live-text') : null;
+
+    if (!streamUrl) {
+        setVDJOffline(vdjDot, vdjText);
+        return;
+    }
+
+    fetch(streamUrl, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' })
+        .then(() => {
+            if (vdjDot) { vdjDot.classList.add('live'); }
+            if (vdjText) { vdjText.classList.add('live'); vdjText.textContent = 'AO VIVO'; }
+            if (liveText) { liveText.textContent = 'AO VIVO'; }
+            if (liveIndicator) { liveIndicator.querySelector('.live-dot').style.background = '#2ecc71'; }
+        })
+        .catch(() => {
+            setVDJOffline(vdjDot, vdjText);
+        });
+}
+
+function setVDJOffline(dot, text) {
+    if (dot) { dot.classList.remove('live'); }
+    if (text) { text.classList.remove('live'); text.textContent = 'OFFLINE'; }
 }
