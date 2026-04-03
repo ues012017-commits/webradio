@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - VaneKonex Rádio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+
+        :root {
+            --bg-color: #08090d;
+            --neon-cyan: #00f3ff;
+            --neon-magenta: #ff007f;
+            --glass-bg: rgba(20, 22, 35, 0.6);
+            --glass-border: rgba(0, 243, 255, 0.2);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg-color);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .login-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+        .login-card h1 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+        }
+        .login-card h1 span { color: var(--neon-cyan); }
+        .login-card .login-subtitle {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+        .login-card .login-icon {
+            font-size: 3rem;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+        }
+        .login-card input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .login-card input:focus {
+            border-color: var(--neon-cyan);
+        }
+        .login-error {
+            color: #e74c3c;
+            font-size: 0.82rem;
+            margin-bottom: 12px;
+            display: none;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--neon-magenta), var(--neon-cyan));
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.2s;
+        }
+        .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Dashboard */
+        .dashboard { display: none; }
+        .dashboard.active { display: block; }
+
+        .admin-header {
+            background: var(--glass-bg);
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .admin-header h2 {
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .admin-header h2 span { color: var(--neon-cyan); }
+        .btn-logout {
+            padding: 8px 18px;
+            background: rgba(231,76,60,0.2);
+            border: 1px solid rgba(231,76,60,0.4);
+            border-radius: 8px;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-logout:hover {
+            background: rgba(231,76,60,0.35);
+        }
+
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(8,9,13,0.6);
+        }
+        .admin-tab {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .admin-tab:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .admin-tab.active {
+            color: var(--neon-cyan);
+            border-color: var(--neon-cyan);
+            background: rgba(0,243,255,0.08);
+        }
+
+        /* Content panels */
+        .admin-content {
+            padding: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .admin-panel {
+            display: none;
+        }
+        .admin-panel.active { display: block; }
+
+        .panel-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .panel-title i { color: var(--neon-cyan); }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            color: #aaa;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--neon-cyan);
+        }
+        .form-group select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 600px) {
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        .btn-save {
+            padding: 11px 28px;
+            background: linear-gradient(135deg, var(--neon-magenta), var(--neon-cyan));
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.2s;
+            margin-top: 8px;
+        }
+        .btn-save:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .save-feedback {
+            display: inline-block;
+            margin-left: 12px;
+            font-size: 0.82rem;
+            color: #2ecc71;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .save-feedback.show { opacity: 1; }
+
+        /* Schedule table */
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 16px;
+        }
+        .schedule-table th,
+        .schedule-table td {
+            padding: 10px 12px;
+            border: 1px solid var(--glass-border);
+            text-align: left;
+            font-size: 0.85rem;
+        }
+        .schedule-table th {
+            background: rgba(0,243,255,0.08);
+            color: var(--neon-cyan);
+            font-weight: 600;
+        }
+        .schedule-table input {
+            width: 100%;
+            padding: 6px 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.82rem;
+            outline: none;
+        }
+        .schedule-table input:focus { border-color: var(--neon-cyan); }
+        .btn-add-row {
+            padding: 6px 14px;
+            background: rgba(0,243,255,0.1);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 6px;
+            color: var(--neon-cyan);
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            transition: all 0.3s;
+        }
+        .btn-add-row:hover { background: rgba(0,243,255,0.2); }
+        .btn-remove-row {
+            padding: 4px 10px;
+            background: rgba(231,76,60,0.15);
+            border: 1px solid rgba(231,76,60,0.3);
+            border-radius: 4px;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 0.7rem;
+            transition: all 0.3s;
+        }
+        .btn-remove-row:hover { background: rgba(231,76,60,0.3); }
+
+        /* Color preview */
+        .color-preview {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 2px solid var(--glass-border);
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-tabs {
+                padding: 12px 16px;
+                gap: 4px;
+            }
+            .admin-tab {
+                padding: 6px 10px;
+                font-size: 0.72rem;
+            }
+            .admin-content { padding: 16px; }
+            .admin-header { padding: 12px 16px; }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.success {
+            background: rgba(46,204,113,0.2);
+            border: 1px solid rgba(46,204,113,0.4);
+            color: #2ecc71;
+        }
+        .toast.error {
+            background: rgba(231,76,60,0.2);
+            border: 1px solid rgba(231,76,60,0.4);
+            color: #e74c3c;
+        }
+
+        /* Back link */
+        .back-link {
+            color: #888;
+            text-decoration: none;
+            font-size: 0.82rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s;
+        }
+        .back-link:hover { color: var(--neon-cyan); }
+    </style>
+</head>
+<body>
+
+    <div class="login-screen" id="login-screen">
+        <div class="login-card">
+            <div class="login-icon"><i class="fa-solid fa-lock"></i></div>
+            <h1>Vane<span>Konex</span> Admin</h1>
+            <p class="login-subtitle">Painel de Administração</p>
+            <form id="login-form">
+                <input type="password" id="login-password" placeholder="Digite a senha de acesso" autocomplete="current-password">
+                <div class="login-error" id="login-error">Senha incorreta. Tente novamente.</div>
+                <button type="submit" class="btn-login"><i class="fa-solid fa-right-to-bracket"></i> Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+        <div class="admin-header">
+            <h2><i class="fa-solid fa-tower-broadcast"></i> Vane<span>Konex</span> Admin</h2>
+            <div style="display:flex;align-items:center;gap:14px;">
+                <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-left"></i> Voltar ao Site</a>
+                <button class="btn-logout" id="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Sair</button>
+            </div>
+        </div>
+
+        <div class="admin-tabs" id="admin-tabs">
+            <button class="admin-tab active" data-tab="geral"><i class="fa-solid fa-circle-info"></i> Informações</button>
+            <button class="admin-tab" data-tab="contato"><i class="fa-solid fa-phone"></i> Contato</button>
+            <button class="admin-tab" data-tab="social"><i class="fa-solid fa-share-nodes"></i> Redes Sociais</button>
+            <button class="admin-tab" data-tab="streaming"><i class="fa-solid fa-tower-broadcast"></i> Streaming</button>
+            <button class="admin-tab" data-tab="aovivo"><i class="fa-solid fa-broadcast-tower"></i> Ao Vivo</button>
+            <button class="admin-tab" data-tab="podcasts"><i class="fa-solid fa-podcast"></i> Podcasts</button>
+            <button class="admin-tab" data-tab="programacao"><i class="fa-solid fa-calendar"></i> Programação</button>
+            <button class="admin-tab" data-tab="locutora"><i class="fa-solid fa-microphone"></i> Locutora</button>
+            <button class="admin-tab" data-tab="layouts"><i class="fa-solid fa-palette"></i> Layouts &amp; Temas</button>
+        </div>
+
+        <div class="admin-content">
+
+            <div class="admin-panel active" id="panel-geral">
+                <h3 class="panel-title"><i class="fa-solid fa-circle-info"></i> Informações Gerais</h3>
+                <div class="form-group">
+                    <label>Nome da Rádio</label>
+                    <input type="text" id="cfg-radio-nome" placeholder="VaneKonex Rádio">
+                </div>
+                <div class="form-group">
+                    <label>Slogan</label>
+                    <input type="text" id="cfg-radio-slogan" placeholder="Sua Rádio, Sua Conexão">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea id="cfg-radio-descricao" placeholder="Descrição da rádio..."></textarea>
+                </div>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-geral">✓ Salvo!</span>
+            </div>
+
+            <div class="admin-panel" id="panel-contato">
+                <h3 class="panel-title"><i class="fa-solid fa-phone"></i> Contato</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Telefone</label>
+                        <input type="text" id="cfg-telefone" placeholder="(11) 99999-9999">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp</label>
+                        <input type="text" id="cfg-whatsapp" placeholder="(11) 99999-9999">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Link WhatsApp (com https://wa.me/...)</label>
+                    <input type="text" id="cfg-whatsapp-link" placeholder="https://wa.me/5511999999999">
+                </div>
+                <div class="form-group">
+                    <label>E-mail</label>
+                    <input type="email" id="cfg-email" placeholder="contato@vanekonex.com.br">
+                </div>
+                <div class="form-group">
+                    <label>Endereço</label>
+                    <input type="text" id="cfg-endereco" placeholder="Rua da Música, 123 - Centro">
+                </div>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-contato">✓ Salvo!</span>
+            </div>
+
+            <div class="admin-panel" id="panel-social">
+                <h3 class="panel-title"><i class="fa-solid fa-share-nodes"></i> Redes Sociais</h3>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-instagram"></i> Instagram URL</label>
+                    <input type="url" id="cfg-instagram" placeholder="https://instagram.com/vanekonex">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-facebook"></i> Facebook URL</label>
+                    <input type="url" id="cfg-facebook" placeholder="https://facebook.com/vanekonex">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-youtube"></i> YouTube URL</label>
+                    <input type="url" id="cfg-youtube" placeholder="https://youtube.com/vanekonex">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-twitter"></i> Twitter URL</label>
+                    <input type="url" id="cfg-twitter" placeholder="https://twitter.com/vanekonex">
+                </div>
+                <div class="form-group">
+                    <label><i class="fa-brands fa-tiktok"></i> TikTok URL</label>
+                    <input type="url" id="cfg-tiktok" placeholder="https://tiktok.com/@vanekonex">
+                </div>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-social">✓ Salvo!</span>
+            </div>
+
+            <!-- ==================== STREAMING ==================== -->
+            <div class="admin-panel" id="panel-streaming">
+                <h3 class="panel-title"><i class="fa-solid fa-tower-broadcast"></i> Configuração de Streaming</h3>
+                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">Configure a fonte de streaming da sua rádio. Escolha o programa/serviço que você utiliza para transmitir.</p>
+                
+                <div class="form-group">
+                    <label>Software de Streaming</label>
+                    <select id="cfg-streaming-software">
+                        <option value="virtual_dj">Virtual DJ</option>
+                        <option value="obs_studio">OBS Studio</option>
+                        <option value="sam_broadcaster">SAM Broadcaster</option>
+                        <option value="radio_boss">RadioBOSS</option>
+                        <option value="butt">BUTT (Broadcast Using This Tool)</option>
+                        <option value="mixxx">Mixxx</option>
+                        <option value="traktor">Traktor Pro</option>
+                        <option value="serato">Serato DJ</option>
+                        <option value="winamp">Winamp + SHOUTcast</option>
+                        <option value="nicecast">Nicecast / Audio Hijack</option>
+                        <option value="rocket_broadcaster">Rocket Broadcaster</option>
+                        <option value="broadwave">BroadWave</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo de Servidor</label>
+                    <select id="cfg-server-type">
+                        <option value="shoutcast_v1">SHOUTcast v1</option>
+                        <option value="shoutcast_v2">SHOUTcast v2</option>
+                        <option value="icecast">Icecast 2</option>
+                        <option value="icecast_kh">Icecast KH</option>
+                        <option value="centova_cast">Centova Cast</option>
+                        <option value="azuracast">AzuraCast</option>
+                        <option value="radiojar">RadioJar</option>
+                        <option value="radio_co">Radio.co</option>
+                        <option value="live365">Live365</option>
+                        <option value="airtime">Airtime Pro / LibreTime</option>
+                        <option value="outro">Outro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>URL do Stream</label>
+                    <input type="url" id="cfg-vdj-stream" placeholder="http://seuservidor.com:8000/stream">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Porta do Stream</label>
+                        <input type="number" id="cfg-stream-port" placeholder="8000">
+                    </div>
+                    <div class="form-group">
+                        <label>Ponto de Montagem</label>
+                        <input type="text" id="cfg-stream-mount" placeholder="/stream ou /live">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Formato do Áudio</label>
+                        <select id="cfg-audio-format">
+                            <option value="mp3">MP3</option>
+                            <option value="aac">AAC / AAC+</option>
+                            <option value="ogg">OGG Vorbis</option>
+                            <option value="opus">Opus</option>
+                            <option value="flac">FLAC</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Bitrate (kbps)</label>
+                        <select id="cfg-audio-bitrate">
+                            <option value="64">64 kbps</option>
+                            <option value="96">96 kbps</option>
+                            <option value="128" selected>128 kbps</option>
+                            <option value="192">192 kbps</option>
+                            <option value="256">256 kbps</option>
+                            <option value="320">320 kbps</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Intervalo de Verificação (segundos)</label>
+                    <input type="number" id="cfg-vdj-interval" placeholder="30" min="10" max="300">
+                </div>
+
+                <div class="form-group">
+                    <label>URL do Stream de Backup (opcional)</label>
+                    <input type="url" id="cfg-stream-backup" placeholder="http://backup.seuservidor.com:8000/stream">
+                </div>
+
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-streaming">✓ Salvo!</span>
+            </div>
+
+            <!-- ==================== AO VIVO ==================== -->
+            <div class="admin-panel" id="panel-aovivo">
+                <h3 class="panel-title"><i class="fa-solid fa-broadcast-tower"></i> Transmissão ao Vivo</h3>
+                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">Configure a integração com programas de transmissão ao vivo. Ao iniciar uma transmissão com um desses programas, o site detecta automaticamente e exibe "AO VIVO".</p>
+
+                <div class="form-group">
+                    <label>Método de Transmissão ao Vivo</label>
+                    <select id="cfg-live-method">
+                        <option value="stream_detect">Detecção Automática (Stream URL)</option>
+                        <option value="manual">Ativação Manual (pelo painel)</option>
+                        <option value="api">Via API Externa</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-circle-check"></i> Status ao Vivo</label>
+                    <div style="display:flex;gap:10px;align-items:center;">
+                        <button class="btn-neon" id="btn-go-live" onclick="toggleLiveStatus(true)" style="padding:8px 18px;font-size:0.85rem;"><i class="fa-solid fa-broadcast-tower"></i> Entrar ao Vivo</button>
+                        <button class="btn-remove-row" id="btn-go-offline" onclick="toggleLiveStatus(false)" style="padding:8px 18px;font-size:0.85rem;"><i class="fa-solid fa-stop"></i> Encerrar</button>
+                        <span id="live-status-badge" style="padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;letter-spacing:1px;background:rgba(136,136,136,0.2);color:#888;">OFFLINE</span>
+                    </div>
+                </div>
+
+                <h4 style="margin:24px 0 12px;color:var(--neon-cyan);font-size:0.95rem;"><i class="fa-solid fa-plug"></i> Programas Compatíveis</h4>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px;">
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-headset" style="font-size:1.5rem;color:var(--neon-cyan);display:block;margin-bottom:6px;"></i>
+                        <strong>Virtual DJ</strong><br><span style="color:#888;">Stream → Icecast/SHOUTcast</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-video" style="font-size:1.5rem;color:#a29bfe;display:block;margin-bottom:6px;"></i>
+                        <strong>OBS Studio</strong><br><span style="color:#888;">RTMP → Servidor</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-tower-broadcast" style="font-size:1.5rem;color:#ff007f;display:block;margin-bottom:6px;"></i>
+                        <strong>SAM Broadcaster</strong><br><span style="color:#888;">Encoder integrado</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-microphone" style="font-size:1.5rem;color:#4ecdc4;display:block;margin-bottom:6px;"></i>
+                        <strong>BUTT</strong><br><span style="color:#888;">Broadcast simples</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-compact-disc" style="font-size:1.5rem;color:#fd79a8;display:block;margin-bottom:6px;"></i>
+                        <strong>Mixxx</strong><br><span style="color:#888;">DJ + Streaming</span>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid var(--glass-border);border-radius:10px;padding:12px;text-align:center;font-size:0.8rem;">
+                        <i class="fa-solid fa-music" style="font-size:1.5rem;color:#ffe66d;display:block;margin-bottom:6px;"></i>
+                        <strong>RadioBOSS</strong><br><span style="color:#888;">Automação + Stream</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>URL RTMP (para OBS/similar)</label>
+                    <input type="url" id="cfg-rtmp-url" placeholder="rtmp://seuservidor.com/live">
+                </div>
+                <div class="form-group">
+                    <label>Chave de Transmissão</label>
+                    <input type="text" id="cfg-stream-key" placeholder="sua-chave-de-stream">
+                </div>
+
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-aovivo">✓ Salvo!</span>
+            </div>
+
+            <!-- ==================== PODCASTS ==================== -->
+            <div class="admin-panel" id="panel-podcasts">
+                <h3 class="panel-title"><i class="fa-solid fa-podcast"></i> Vídeo Podcasts</h3>
+                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">Gerencie seus vídeo podcasts diretamente por aqui. Adicione, edite ou exclua episódios.</p>
+
+                <div style="background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);border-radius:12px;padding:20px;margin-bottom:20px;">
+                    <h4 style="margin-bottom:14px;color:var(--neon-cyan);font-size:0.92rem;"><i class="fa-solid fa-plus-circle"></i> Adicionar Novo Episódio</h4>
+                    <div class="form-group">
+                        <label>Título do Episódio</label>
+                        <input type="text" id="podcast-title" placeholder="Ex: Entrevista com DJ Carlos">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>URL do Vídeo (YouTube, Vimeo, etc.)</label>
+                            <input type="url" id="podcast-url" placeholder="https://youtube.com/watch?v=...">
+                        </div>
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <select id="podcast-category">
+                                <option value="Música">Música</option>
+                                <option value="Entrevista">Entrevista</option>
+                                <option value="Tecnologia">Tecnologia</option>
+                                <option value="Cultura">Cultura</option>
+                                <option value="Especial">Especial</option>
+                                <option value="Debate">Debate</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <textarea id="podcast-description" placeholder="Descrição do episódio..." rows="3"></textarea>
+                    </div>
+                    <button class="btn-neon" onclick="addPodcastFromAdmin()" style="padding:10px 24px;font-size:0.85rem;"><i class="fa-solid fa-plus"></i> Adicionar Episódio</button>
+                </div>
+
+                <h4 style="margin-bottom:12px;color:#ccc;font-size:0.9rem;"><i class="fa-solid fa-list"></i> Episódios Cadastrados</h4>
+                <div id="podcast-list-admin" style="display:flex;flex-direction:column;gap:10px;">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <div class="admin-panel" id="panel-programacao">
+                <h3 class="panel-title"><i class="fa-solid fa-calendar"></i> Programação</h3>
+                <table class="schedule-table" id="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Horário</th>
+                            <th>Programa</th>
+                            <th>DJ / Locutor</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body"></tbody>
+                </table>
+                <button class="btn-add-row" onclick="addScheduleRow()"><i class="fa-solid fa-plus"></i> Adicionar Programa</button>
+                <br>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-programacao">✓ Salvo!</span>
+            </div>
+
+            <div class="admin-panel" id="panel-locutora">
+                <h3 class="panel-title"><i class="fa-solid fa-microphone"></i> Locutora</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nome</label>
+                        <input type="text" id="cfg-locutora-nome" placeholder="Vanessa Corrêa">
+                    </div>
+                    <div class="form-group">
+                        <label>URL da Foto</label>
+                        <input type="url" id="cfg-locutora-foto" placeholder="https://...">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Bio / Descrição</label>
+                    <textarea id="cfg-locutora-bio" placeholder="Locutora apaixonada por rádio..."></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-instagram"></i> Instagram</label>
+                        <input type="url" id="cfg-locutora-instagram" placeholder="https://instagram.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-facebook"></i> Facebook</label>
+                        <input type="url" id="cfg-locutora-facebook" placeholder="https://facebook.com/...">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-twitter"></i> Twitter</label>
+                        <input type="url" id="cfg-locutora-twitter" placeholder="https://twitter.com/...">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-brands fa-tiktok"></i> TikTok</label>
+                        <input type="url" id="cfg-locutora-tiktok" placeholder="https://tiktok.com/...">
+                    </div>
+                </div>
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-locutora">✓ Salvo!</span>
+            </div>
+
+            <!-- ==================== LAYOUTS & TEMAS ==================== -->
+            <div class="admin-panel" id="panel-layouts">
+                <h3 class="panel-title"><i class="fa-solid fa-palette"></i> Layouts &amp; Temas</h3>
+                <p style="color:#888;font-size:0.82rem;margin-bottom:18px;">Escolha entre 40 temas prontos ou personalize cores, animações e efeitos. Ideal para personalizar para cada cliente.</p>
+
+                <div class="form-group">
+                    <label>URL do Logo</label>
+                    <input type="url" id="cfg-logo-url" placeholder="logo.png">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cor Primária <span class="color-preview" id="preview-primaria"></span></label>
+                        <input type="text" id="cfg-cor-primaria" placeholder="#00f3ff">
+                    </div>
+                    <div class="form-group">
+                        <label>Cor Secundária <span class="color-preview" id="preview-secundaria"></span></label>
+                        <input type="text" id="cfg-cor-secundaria" placeholder="#ff007f">
+                    </div>
+                </div>
+
+                <h4 style="margin:20px 0 12px;color:var(--neon-cyan);font-size:0.95rem;"><i class="fa-solid fa-swatchbook"></i> Temas Prontos (40)</h4>
+                <p style="color:#666;font-size:0.78rem;margin-bottom:14px;">Clique em um tema para aplicar as cores automaticamente.</p>
+                <div id="theme-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;margin-bottom:20px;max-height:420px;overflow-y:auto;padding-right:4px;">
+                </div>
+
+                <h4 style="margin:20px 0 12px;color:var(--neon-cyan);font-size:0.95rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> Animações &amp; Efeitos</h4>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Efeito de Fundo</label>
+                        <select id="cfg-bg-effect">
+                            <option value="orbs">Orbes Animadas</option>
+                            <option value="particles">Partículas Flutuantes</option>
+                            <option value="stars">Céu Estrelado</option>
+                            <option value="matrix">Efeito Matrix</option>
+                            <option value="waves">Ondas Sonoras</option>
+                            <option value="gradient">Gradiente Animado</option>
+                            <option value="smoke_heavy">Fumaça Intensa</option>
+                            <option value="minimal">Mínimo / Limpo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estilo do Player</label>
+                        <select id="cfg-player-style">
+                            <option value="vinyl">Vinil Clássico</option>
+                            <option value="modern">Player Moderno</option>
+                            <option value="minimal">Minimalista</option>
+                            <option value="retro">Retrô Neon</option>
+                            <option value="wave">Waveform</option>
+                            <option value="circular">Circular 3D</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Intensidade da Fumaça</label>
+                        <select id="cfg-smoke-intensity">
+                            <option value="none">Desativada</option>
+                            <option value="light">Leve</option>
+                            <option value="medium">Média</option>
+                            <option value="heavy" selected>Intensa</option>
+                            <option value="extreme">Extrema</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Brilho Neon</label>
+                        <select id="cfg-neon-glow">
+                            <option value="off">Desativado</option>
+                            <option value="subtle">Sutil</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="intense">Intenso</option>
+                            <option value="extreme">Extremo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Fonte do Texto</label>
+                        <select id="cfg-font-family">
+                            <option value="Poppins">Poppins (Padrão)</option>
+                            <option value="Inter">Inter</option>
+                            <option value="Roboto">Roboto</option>
+                            <option value="Montserrat">Montserrat</option>
+                            <option value="Raleway">Raleway</option>
+                            <option value="Orbitron">Orbitron</option>
+                            <option value="Audiowide">Audiowide</option>
+                            <option value="Righteous">Righteous</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estilo dos Cards</label>
+                        <select id="cfg-card-style">
+                            <option value="glass" selected>Glassmorphism</option>
+                            <option value="solid">Sólido</option>
+                            <option value="outline">Contorno</option>
+                            <option value="gradient">Gradiente</option>
+                            <option value="neumorphism">Neumorphism</option>
+                            <option value="flat">Flat Design</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Layout da Página</label>
+                        <select id="cfg-page-layout">
+                            <option value="full" selected>Completo (Padrão)</option>
+                            <option value="compact">Compacto</option>
+                            <option value="landing">Landing Page</option>
+                            <option value="sidebar">Com Sidebar Fixa</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Cantos dos Elementos</label>
+                        <select id="cfg-border-radius">
+                            <option value="sharp">Reto (0px)</option>
+                            <option value="slight">Leve (8px)</option>
+                            <option value="rounded" selected>Arredondado (16px)</option>
+                            <option value="pill">Pílula (50px)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-save" onclick="saveConfig()"><i class="fa-solid fa-floppy-disk"></i> Salvar</button>
+                <span class="save-feedback" id="feedback-layouts">✓ Salvo!</span>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+    let currentPassword = '';
+    let currentConfig = {};
+
+    // Toast notification
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+
+    // Login (com senha konex2026 direta)
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const pwd = document.getElementById('login-password').value;
+        if (pwd === 'konex2026') {
+            currentPassword = pwd;
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+            loadConfig();
+        } else {
+            document.getElementById('login-error').style.display = 'block';
+        }
+    });
+
+    // Logout
+    document.getElementById('btn-logout').addEventListener('click', function() {
+        currentPassword = '';
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('dashboard').classList.remove('active');
+        document.getElementById('login-password').value = '';
+        document.getElementById('login-error').style.display = 'none';
+    });
+
+    // Tabs
+    document.getElementById('admin-tabs').addEventListener('click', function(e) {
+        const tab = e.target.closest('.admin-tab');
+        if (!tab) return;
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        const panelId = 'panel-' + tab.getAttribute('data-tab');
+        document.getElementById(panelId).classList.add('active');
+    });
+
+    // Load config from API
+    async function loadConfig() {
+        try {
+            const res = await fetch('api.php');
+            if (res.ok) {
+                currentConfig = await res.json();
+            }
+        } catch(e) {
+            const cached = localStorage.getItem('vanekonex_config');
+            if (cached) currentConfig = JSON.parse(cached);
+        }
+        populateForm();
+    }
+
+    function populateForm() {
+        const c = currentConfig;
+        setVal('cfg-radio-nome', c.radio_nome);
+        setVal('cfg-radio-slogan', c.radio_slogan);
+        setVal('cfg-radio-descricao', c.radio_descricao);
+        setVal('cfg-telefone', c.telefone);
+        setVal('cfg-whatsapp', c.whatsapp);
+        setVal('cfg-whatsapp-link', c.whatsapp_link);
+        setVal('cfg-email', c.email);
+        setVal('cfg-endereco', c.endereco);
+        setVal('cfg-instagram', c.instagram);
+        setVal('cfg-facebook', c.facebook);
+        setVal('cfg-youtube', c.youtube);
+        setVal('cfg-twitter', c.twitter);
+        setVal('cfg-tiktok', c.tiktok);
+        setVal('cfg-vdj-stream', c.vdj_stream_url);
+        setVal('cfg-vdj-interval', c.vdj_check_interval);
+        setVal('cfg-locutora-nome', c.locutora_nome);
+        setVal('cfg-locutora-foto', c.locutora_foto);
+        setVal('cfg-locutora-bio', c.locutora_bio);
+        setVal('cfg-locutora-instagram', c.locutora_instagram);
+        setVal('cfg-locutora-facebook', c.locutora_facebook);
+        setVal('cfg-locutora-twitter', c.locutora_twitter);
+        setVal('cfg-locutora-tiktok', c.locutora_tiktok);
+        setVal('cfg-logo-url', c.logo_url);
+        setVal('cfg-cor-primaria', c.cor_primaria);
+        setVal('cfg-cor-secundaria', c.cor_secundaria);
+
+        // Streaming fields
+        setVal('cfg-streaming-software', c.streaming_software);
+        setVal('cfg-server-type', c.server_type);
+        setVal('cfg-stream-port', c.stream_port);
+        setVal('cfg-stream-mount', c.stream_mount);
+        setVal('cfg-audio-format', c.audio_format);
+        setVal('cfg-audio-bitrate', c.audio_bitrate);
+        setVal('cfg-stream-backup', c.stream_backup);
+
+        // Live fields
+        setVal('cfg-live-method', c.live_method);
+        setVal('cfg-rtmp-url', c.rtmp_url);
+        setVal('cfg-stream-key', c.stream_key);
+
+        // Layout fields
+        setVal('cfg-bg-effect', c.bg_effect);
+        setVal('cfg-player-style', c.player_style);
+        setVal('cfg-smoke-intensity', c.smoke_intensity);
+        setVal('cfg-neon-glow', c.neon_glow);
+        setVal('cfg-font-family', c.font_family);
+        setVal('cfg-card-style', c.card_style);
+        setVal('cfg-page-layout', c.page_layout);
+        setVal('cfg-border-radius', c.border_radius);
+
+        // Live status
+        if (c.is_live === 'true' || c.is_live === true) {
+            updateLiveBadge(true);
+        }
+
+        updateColorPreviews();
+        populateSchedule(c.programacao || []);
+        loadPodcasts();
+        renderThemeGrid();
+    }
+
+    function setVal(id, val) {
+        const el = document.getElementById(id);
+        if (el && val !== undefined && val !== null) el.value = val;
+    }
+
+    function getVal(id) {
+        const el = document.getElementById(id);
+        return el ? el.value : '';
+    }
+
+    function updateColorPreviews() {
+        const p = document.getElementById('preview-primaria');
+        const s = document.getElementById('preview-secundaria');
+        if (p) p.style.background = getVal('cfg-cor-primaria') || '#00f3ff';
+        if (s) s.style.background = getVal('cfg-cor-secundaria') || '#ff007f';
+    }
+
+    // Color preview live update
+    const corPrimariaEl = document.getElementById('cfg-cor-primaria');
+    const corSecundariaEl = document.getElementById('cfg-cor-secundaria');
+    if (corPrimariaEl) corPrimariaEl.addEventListener('input', updateColorPreviews);
+    if (corSecundariaEl) corSecundariaEl.addEventListener('input', updateColorPreviews);
+
+    // Schedule
+    function populateSchedule(items) {
+        const tbody = document.getElementById('schedule-body');
+        tbody.innerHTML = '';
+        items.forEach(item => addScheduleRow(item.horario, item.programa, item.dj));
+    }
+
+    function addScheduleRow(horario, programa, dj) {
+        const tbody = document.getElementById('schedule-body');
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+            '<td><input type="text" class="sch-horario" placeholder="00:00 - 00:00" value="' + escapeAttr(horario || '') + '"></td>' +
+            '<td><input type="text" class="sch-programa" placeholder="Nome do programa" value="' + escapeAttr(programa || '') + '"></td>' +
+            '<td><input type="text" class="sch-dj" placeholder="DJ / Locutor" value="' + escapeAttr(dj || '') + '"></td>' +
+            '<td><button class="btn-remove-row" onclick="this.closest(\'tr\').remove()"><i class="fa-solid fa-trash"></i></button></td>';
+        tbody.appendChild(tr);
+    }
+
+    function escapeAttr(str) {
+        return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function getScheduleData() {
+        const rows = document.querySelectorAll('#schedule-body tr');
+        const data = [];
+        rows.forEach(row => {
+            const horario = row.querySelector('.sch-horario').value.trim();
+            const programa = row.querySelector('.sch-programa').value.trim();
+            const dj = row.querySelector('.sch-dj').value.trim();
+            if (horario || programa || dj) {
+                data.push({ horario: horario, programa: programa, dj: dj });
+            }
+        });
+        return data;
+    }
+
+    // Save config
+    async function saveConfig() {
+        const config = {
+            radio_nome: getVal('cfg-radio-nome'),
+            radio_slogan: getVal('cfg-radio-slogan'),
+            radio_descricao: getVal('cfg-radio-descricao'),
+            telefone: getVal('cfg-telefone'),
+            whatsapp: getVal('cfg-whatsapp'),
+            whatsapp_link: getVal('cfg-whatsapp-link'),
+            email: getVal('cfg-email'),
+            endereco: getVal('cfg-endereco'),
+            instagram: getVal('cfg-instagram'),
+            facebook: getVal('cfg-facebook'),
+            youtube: getVal('cfg-youtube'),
+            twitter: getVal('cfg-twitter'),
+            tiktok: getVal('cfg-tiktok'),
+            vdj_stream_url: getVal('cfg-vdj-stream'),
+            vdj_check_interval: parseInt(getVal('cfg-vdj-interval')) || 30,
+            locutora_nome: getVal('cfg-locutora-nome'),
+            locutora_bio: getVal('cfg-locutora-bio'),
+            locutora_foto: getVal('cfg-locutora-foto'),
+            locutora_instagram: getVal('cfg-locutora-instagram'),
+            locutora_facebook: getVal('cfg-locutora-facebook'),
+            locutora_twitter: getVal('cfg-locutora-twitter'),
+            locutora_tiktok: getVal('cfg-locutora-tiktok'),
+            logo_url: getVal('cfg-logo-url'),
+            cor_primaria: getVal('cfg-cor-primaria'),
+            cor_secundaria: getVal('cfg-cor-secundaria'),
+            // Streaming
+            streaming_software: getVal('cfg-streaming-software'),
+            server_type: getVal('cfg-server-type'),
+            stream_port: getVal('cfg-stream-port'),
+            stream_mount: getVal('cfg-stream-mount'),
+            audio_format: getVal('cfg-audio-format'),
+            audio_bitrate: getVal('cfg-audio-bitrate'),
+            stream_backup: getVal('cfg-stream-backup'),
+            // Live
+            live_method: getVal('cfg-live-method'),
+            rtmp_url: getVal('cfg-rtmp-url'),
+            stream_key: getVal('cfg-stream-key'),
+            // Layout
+            bg_effect: getVal('cfg-bg-effect'),
+            player_style: getVal('cfg-player-style'),
+            smoke_intensity: getVal('cfg-smoke-intensity'),
+            neon_glow: getVal('cfg-neon-glow'),
+            font_family: getVal('cfg-font-family'),
+            card_style: getVal('cfg-card-style'),
+            page_layout: getVal('cfg-page-layout'),
+            border_radius: getVal('cfg-border-radius'),
+            // Schedule
+            programacao: getScheduleData(),
+            password: currentPassword
+        };
+
+        // Save to localStorage
+        const configWithoutPwd = Object.assign({}, config);
+        delete configWithoutPwd.password;
+        localStorage.setItem('vanekonex_config', JSON.stringify(configWithoutPwd));
+
+        // Save to server
+        try {
+            const res = await fetch('api.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(config)
+            });
+            const data = await res.json();
+            if (res.ok) {
+                showToast('Configuração salva com sucesso!', 'success');
+            } else {
+                showToast('Erro: ' + (data.error || 'Falha ao salvar'), 'error');
+            }
+        } catch(e) {
+            showToast('Salvo localmente (servidor indisponível)', 'success');
+        }
+
+        currentConfig = configWithoutPwd;
+    }
+
+    // ==================== PODCAST MANAGEMENT ====================
+    const PODCAST_STORAGE_KEY = 'vanekonex_podcasts';
+
+    function getDefaultPodcasts() {
+        return [
+            {
+                id: 1,
+                title: 'VaneKonex Podcast #1 - Estreia',
+                url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                description: 'Episódio de estreia do podcast da VaneKonex Rádio. Conheça nossa história e nossos planos.',
+                category: 'Especial',
+                date: '2026-01-15'
+            }
+        ];
+    }
+
+    function loadPodcasts() {
+        let podcasts = JSON.parse(localStorage.getItem(PODCAST_STORAGE_KEY) || 'null');
+        if (!podcasts) {
+            podcasts = getDefaultPodcasts();
+            localStorage.setItem(PODCAST_STORAGE_KEY, JSON.stringify(podcasts));
+        }
+        renderPodcastList(podcasts);
+    }
+
+    function renderPodcastList(podcasts) {
+        const container = document.getElementById('podcast-list-admin');
+        if (!container) return;
+        if (podcasts.length === 0) {
+            container.innerHTML = '<p style="color:#666;font-size:0.85rem;text-align:center;padding:20px;">Nenhum episódio cadastrado.</p>';
+            return;
+        }
+        container.innerHTML = podcasts.map(function(p) {
+            return '<div style="background:rgba(255,255,255,0.03);border:1px solid var(--glass-border);border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center;">' +
+                '<div style="flex:1;">' +
+                    '<strong style="color:#fff;font-size:0.9rem;">' + escapeAttr(p.title) + '</strong>' +
+                    '<div style="color:#888;font-size:0.75rem;margin-top:4px;">' +
+                        '<span style="background:rgba(0,243,255,0.15);padding:2px 8px;border-radius:10px;color:var(--neon-cyan);margin-right:8px;">' + escapeAttr(p.category) + '</span>' +
+                        escapeAttr(p.date || '') +
+                    '</div>' +
+                    '<div style="color:#666;font-size:0.78rem;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px;">' + escapeAttr(p.url) + '</div>' +
+                '</div>' +
+                '<div style="display:flex;gap:6px;margin-left:10px;">' +
+                    '<button class="btn-neon" onclick="editPodcast(' + p.id + ')" style="padding:6px 12px;font-size:0.75rem;"><i class="fa-solid fa-pen"></i></button>' +
+                    '<button class="btn-remove-row" onclick="deletePodcast(' + p.id + ')" style="padding:6px 12px;font-size:0.75rem;"><i class="fa-solid fa-trash"></i></button>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    function addPodcastFromAdmin() {
+        const title = document.getElementById('podcast-title').value.trim();
+        const url = document.getElementById('podcast-url').value.trim();
+        const category = document.getElementById('podcast-category').value;
+        const description = document.getElementById('podcast-description').value.trim();
+
+        if (!title || !url) {
+            showToast('Preencha o título e a URL do vídeo', 'error');
+            return;
+        }
+        try {
+            const parsed = new URL(url);
+            if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+                showToast('URL inválida. Use http:// ou https://', 'error');
+                return;
+            }
+        } catch(e) {
+            showToast('URL inválida', 'error');
+            return;
+        }
+
+        let podcasts = JSON.parse(localStorage.getItem(PODCAST_STORAGE_KEY) || '[]');
+        const newId = podcasts.length > 0 ? Math.max.apply(null, podcasts.map(function(p) { return p.id; })) + 1 : 1;
+        podcasts.push({
+            id: newId,
+            title: title,
+            url: url,
+            description: description,
+            category: category,
+            date: new Date().toISOString().split('T')[0]
+        });
+        localStorage.setItem(PODCAST_STORAGE_KEY, JSON.stringify(podcasts));
+        renderPodcastList(podcasts);
+
+        // Clear form
+        document.getElementById('podcast-title').value = '';
+        document.getElementById('podcast-url').value = '';
+        document.getElementById('podcast-description').value = '';
+        showToast('Episódio adicionado com sucesso!', 'success');
+    }
+
+    function editPodcast(id) {
+        let podcasts = JSON.parse(localStorage.getItem(PODCAST_STORAGE_KEY) || '[]');
+        const podcast = podcasts.find(function(p) { return p.id === id; });
+        if (!podcast) return;
+
+        document.getElementById('podcast-title').value = podcast.title;
+        document.getElementById('podcast-url').value = podcast.url;
+        document.getElementById('podcast-category').value = podcast.category;
+        document.getElementById('podcast-description').value = podcast.description || '';
+
+        // Remove old and re-add when saved
+        deletePodcast(id);
+        showToast('Editando episódio - modifique e clique em Adicionar', 'success');
+    }
+
+    function deletePodcast(id) {
+        let podcasts = JSON.parse(localStorage.getItem(PODCAST_STORAGE_KEY) || '[]');
+        podcasts = podcasts.filter(function(p) { return p.id !== id; });
+        localStorage.setItem(PODCAST_STORAGE_KEY, JSON.stringify(podcasts));
+        renderPodcastList(podcasts);
+    }
+
+    // ==================== LIVE STATUS ====================
+    function toggleLiveStatus(goLive) {
+        updateLiveBadge(goLive);
+        // Save to localStorage so the main site can read it
+        localStorage.setItem('vanekonex_is_live', goLive ? 'true' : 'false');
+        showToast(goLive ? 'Transmissão ao vivo ativada!' : 'Transmissão encerrada', goLive ? 'success' : 'error');
+    }
+
+    function updateLiveBadge(isLive) {
+        const badge = document.getElementById('live-status-badge');
+        if (!badge) return;
+        if (isLive) {
+            badge.textContent = 'AO VIVO';
+            badge.style.background = 'rgba(46, 204, 113, 0.2)';
+            badge.style.color = '#2ecc71';
+        } else {
+            badge.textContent = 'OFFLINE';
+            badge.style.background = 'rgba(136, 136, 136, 0.2)';
+            badge.style.color = '#888';
+        }
+    }
+
+    // ==================== 40 THEME PRESETS ====================
+    var THEME_PRESETS = [
+        { name: 'Neon Cyber', primary: '#00f3ff', secondary: '#ff007f', bg: '#08090d' },
+        { name: 'Sunset Glow', primary: '#ff6b35', secondary: '#f7c59f', bg: '#1a0a00' },
+        { name: 'Ocean Deep', primary: '#0077b6', secondary: '#00b4d8', bg: '#03071e' },
+        { name: 'Purple Haze', primary: '#9b5de5', secondary: '#f15bb5', bg: '#10002b' },
+        { name: 'Emerald Night', primary: '#2ecc71', secondary: '#27ae60', bg: '#0a1f0a' },
+        { name: 'Golden Hour', primary: '#f39c12', secondary: '#e74c3c', bg: '#1a1000' },
+        { name: 'Arctic Ice', primary: '#a8dadc', secondary: '#457b9d', bg: '#0d1b2a' },
+        { name: 'Cherry Blossom', primary: '#ff69b4', secondary: '#ff1493', bg: '#1a0010' },
+        { name: 'Midnight Blue', primary: '#1e3a5f', secondary: '#3a7bd5', bg: '#0a0e1a' },
+        { name: 'Fire Storm', primary: '#ff4500', secondary: '#ff8c00', bg: '#1a0500' },
+        { name: 'Mint Fresh', primary: '#00e5a0', secondary: '#00c9a7', bg: '#0a1a15' },
+        { name: 'Royal Purple', primary: '#7b2ff7', secondary: '#c471ed', bg: '#0f0020' },
+        { name: 'Coral Reef', primary: '#ff6f61', secondary: '#ff9a8b', bg: '#1a0d0a' },
+        { name: 'Electric Blue', primary: '#0000ff', secondary: '#4169e1', bg: '#000014' },
+        { name: 'Lava Flow', primary: '#cf1020', secondary: '#ff4500', bg: '#1a0000' },
+        { name: 'Forest Green', primary: '#228b22', secondary: '#32cd32', bg: '#0a1a0a' },
+        { name: 'Pink Panther', primary: '#ff1493', secondary: '#ff69b4', bg: '#1a0015' },
+        { name: 'Sky Blue', primary: '#87ceeb', secondary: '#4682b4', bg: '#0a1520' },
+        { name: 'Orange Crush', primary: '#ff8c00', secondary: '#ffa500', bg: '#1a0f00' },
+        { name: 'Grape Soda', primary: '#6a0dad', secondary: '#9b59b6', bg: '#0f0014' },
+        { name: 'Turquoise', primary: '#40e0d0', secondary: '#48d1cc', bg: '#0a1a1a' },
+        { name: 'Rose Gold', primary: '#b76e79', secondary: '#e8a87c', bg: '#1a100d' },
+        { name: 'Neon Green', primary: '#39ff14', secondary: '#00ff7f', bg: '#001a00' },
+        { name: 'Dark Mocha', primary: '#8b4513', secondary: '#d2691e', bg: '#1a0f05' },
+        { name: 'Steel Grey', primary: '#708090', secondary: '#778899', bg: '#0d0d0d' },
+        { name: 'Ruby Red', primary: '#e0115f', secondary: '#dc143c', bg: '#1a0008' },
+        { name: 'Candy Pop', primary: '#ff6ec7', secondary: '#7df9ff', bg: '#0f0020' },
+        { name: 'Matrix', primary: '#00ff41', secondary: '#008f11', bg: '#000000' },
+        { name: 'Vaporwave', primary: '#ff71ce', secondary: '#01cdfe', bg: '#0f0028' },
+        { name: 'Sunset Beach', primary: '#ff7e5f', secondary: '#feb47b', bg: '#1a0d05' },
+        { name: 'Deep Space', primary: '#2c3e50', secondary: '#3498db', bg: '#050510' },
+        { name: 'Tropical', primary: '#f9ca24', secondary: '#f0932b', bg: '#1a1500' },
+        { name: 'Winter Frost', primary: '#b3cde0', secondary: '#6497b1', bg: '#0a1020' },
+        { name: 'Neon Pink', primary: '#ff00ff', secondary: '#ff1493', bg: '#0f000f' },
+        { name: 'Olive Night', primary: '#6b8e23', secondary: '#9acd32', bg: '#0d1a05' },
+        { name: 'Bronze Age', primary: '#cd7f32', secondary: '#b8860b', bg: '#1a1005' },
+        { name: 'Aquamarine', primary: '#7fffd4', secondary: '#66cdaa', bg: '#0a1a15' },
+        { name: 'Retro Wave', primary: '#f706cf', secondary: '#fd1d1d', bg: '#0a0014' },
+        { name: 'Pastel Dream', primary: '#b5b9ff', secondary: '#ffb5e8', bg: '#0f0f1a' },
+        { name: 'Carbon Dark', primary: '#444444', secondary: '#666666', bg: '#0a0a0a' }
+    ];
+
+    function renderThemeGrid() {
+        var grid = document.getElementById('theme-grid');
+        if (!grid) return;
+        grid.innerHTML = THEME_PRESETS.map(function(t, i) {
+            return '<div class="theme-preset-card" onclick="applyThemePreset(' + i + ')" style="' +
+                'background:' + t.bg + ';' +
+                'border:1px solid ' + t.primary + '33;' +
+                'border-radius:10px;' +
+                'padding:10px;' +
+                'cursor:pointer;' +
+                'transition:all 0.3s ease;' +
+                'text-align:center;' +
+                '">' +
+                '<div style="display:flex;gap:4px;justify-content:center;margin-bottom:6px;">' +
+                    '<span style="width:20px;height:20px;border-radius:50%;background:' + t.primary + ';display:inline-block;"></span>' +
+                    '<span style="width:20px;height:20px;border-radius:50%;background:' + t.secondary + ';display:inline-block;"></span>' +
+                '</div>' +
+                '<span style="font-size:0.72rem;color:#ccc;">' + escapeAttr(t.name) + '</span>' +
+            '</div>';
+        }).join('');
+    }
+
+    function applyThemePreset(index) {
+        var theme = THEME_PRESETS[index];
+        if (!theme) return;
+        document.getElementById('cfg-cor-primaria').value = theme.primary;
+        document.getElementById('cfg-cor-secundaria').value = theme.secondary;
+        updateColorPreviews();
+        showToast('Tema "' + theme.name + '" aplicado! Clique Salvar para confirmar.', 'success');
+    }
+    </script>
+</body>
+</html>

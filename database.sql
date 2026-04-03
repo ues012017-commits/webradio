@@ -60,7 +60,29 @@ INSERT INTO configuracao (chave, valor) VALUES
     ('locutora_tiktok', '#'),
     ('logo_url', 'logo.png'),
     ('cor_primaria', '#00f3ff'),
-    ('cor_secundaria', '#ff007f');
+    ('cor_secundaria', '#ff007f'),
+    -- Streaming settings
+    ('streaming_software', 'virtual_dj'),
+    ('server_type', 'icecast'),
+    ('stream_port', '8000'),
+    ('stream_mount', '/stream'),
+    ('audio_format', 'mp3'),
+    ('audio_bitrate', '128'),
+    ('stream_backup', ''),
+    -- Live settings
+    ('live_method', 'stream_detect'),
+    ('rtmp_url', ''),
+    ('stream_key', ''),
+    ('is_live', 'false'),
+    -- Layout settings
+    ('bg_effect', 'orbs'),
+    ('player_style', 'vinyl'),
+    ('smoke_intensity', 'heavy'),
+    ('neon_glow', 'normal'),
+    ('font_family', 'Poppins'),
+    ('card_style', 'glass'),
+    ('page_layout', 'full'),
+    ('border_radius', 'rounded');
 
 INSERT INTO programacao (horario, programa, dj, ordem) VALUES
     ('06:00 - 09:00', 'Bom Dia VaneKonex', 'DJ Carlos', 1),
