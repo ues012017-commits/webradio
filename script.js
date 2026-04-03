@@ -796,7 +796,7 @@ function applySiteConfig(cfg) {
     const locutoraName = document.getElementById('locutora-name');
     const locutoraPhoto = document.getElementById('locutora-photo');
     if (locutoraName && cfg.locutora_nome) locutoraName.textContent = cfg.locutora_nome;
-    if (locutoraPhoto && cfg.locutora_foto) locutoraPhoto.src = cfg.locutora_foto;
+    if (locutoraPhoto && cfg.locutora_foto && isSafeUrl(cfg.locutora_foto)) locutoraPhoto.src = cfg.locutora_foto;
 
     const locutoraSocials = {
         'locutora-instagram': cfg.locutora_instagram,
