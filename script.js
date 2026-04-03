@@ -469,4 +469,175 @@ document.addEventListener('DOMContentLoaded', () => {
     initChatbot();
     initForms();
     initSmoothScroll();
+    initCursorGlow();
+    initAudioVisualizer();
+    initListenerCounter();
+    initTiltCards();
 });
+
+// =============================================
+// CURSOR GLOW TRAIL
+// =============================================
+function initCursorGlow() {
+    const glow = document.getElementById('cursor-glow');
+    if (!glow) return;
+
+    // Only on desktop (no touch)
+    if ('ontouchstart' in window) return;
+
+    document.addEventListener('mousemove', (e) => {
+        glow.classList.add('active');
+        glow.style.left = e.clientX + 'px';
+        glow.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('mouseleave', () => {
+        glow.classList.remove('active');
+    });
+}
+
+// =============================================
+// AUDIO VISUALIZER (Web Audio API)
+// =============================================
+function initAudioVisualizer() {
+    const canvas = document.getElementById('audio-visualizer');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let audioContext = null;
+    let analyser = null;
+    let dataArray = null;
+    let source = null;
+    let connected = false;
+    let animId = null;
+
+    function setupAudioContext() {
+        if (connected) return;
+        try {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+
+            source = audioContext.createMediaElementSource(player);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+            connected = true;
+        } catch (e) {
+            // Fallback: draw static visualizer
+            connected = false;
+        }
+    }
+
+    function resizeCanvas() {
+        canvas.width = canvas.offsetWidth * (window.devicePixelRatio || 1);
+        canvas.height = canvas.offsetHeight * (window.devicePixelRatio || 1);
+        ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    function drawVisualizer() {
+        animId = requestAnimationFrame(drawVisualizer);
+
+        const w = canvas.offsetWidth;
+        const h = canvas.offsetHeight;
+        ctx.clearRect(0, 0, w, h);
+
+        if (connected && analyser) {
+            analyser.getByteFrequencyData(dataArray);
+        }
+
+        const barCount = 64;
+        const barWidth = w / barCount;
+        const gap = 2;
+
+        for (let i = 0; i < barCount; i++) {
+            let barHeight;
+            if (connected && dataArray) {
+                const index = Math.floor(i * (dataArray.length / barCount));
+                barHeight = (dataArray[index] / 255) * h * 0.9;
+            } else {
+                // Idle animation when not connected
+                barHeight = (Math.sin(Date.now() / 500 + i * 0.3) * 0.3 + 0.4) * h * 0.3;
+                if (tocando) {
+                    barHeight = (Math.sin(Date.now() / 200 + i * 0.5) * 0.4 + 0.5) * h * 0.5;
+                }
+            }
+
+            const x = i * barWidth + gap / 2;
+            const gradient = ctx.createLinearGradient(x, h, x, h - barHeight);
+            gradient.addColorStop(0, 'rgba(255, 0, 127, 0.8)');
+            gradient.addColorStop(0.5, 'rgba(0, 243, 255, 0.8)');
+            gradient.addColorStop(1, 'rgba(108, 92, 231, 0.6)');
+
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.roundRect(x, h - barHeight, barWidth - gap, barHeight, 2);
+            ctx.fill();
+
+            // Glow effect
+            ctx.shadowColor = 'rgba(0, 243, 255, 0.3)';
+            ctx.shadowBlur = 5;
+        }
+        ctx.shadowBlur = 0;
+    }
+
+    drawVisualizer();
+
+    // Connect audio when user first plays
+    const origTogglePlay = window.togglePlay;
+    if (origTogglePlay) {
+        // We hook into player's play event to connect audio context
+        player.addEventListener('play', function connectOnce() {
+            setupAudioContext();
+            if (audioContext && audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        });
+    }
+}
+
+// =============================================
+// LIVE LISTENER COUNTER ANIMATION
+// =============================================
+function initListenerCounter() {
+    const counterEl = document.getElementById('listener-count');
+    if (!counterEl) return;
+
+    let baseCount = 1247;
+
+    setInterval(() => {
+        const change = Math.floor(Math.random() * 11) - 4; // -4 to +6
+        baseCount = Math.max(800, Math.min(2000, baseCount + change));
+        counterEl.textContent = baseCount.toLocaleString('pt-BR');
+    }, 5000);
+}
+
+// =============================================
+// 3D TILT EFFECT ON CARDS
+// =============================================
+function initTiltCards() {
+    if ('ontouchstart' in window) return; // Skip on mobile
+
+    const cards = document.querySelectorAll('[data-tilt]');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = ((y - centerY) / centerY) * -6;
+            const rotateY = ((x - centerX) / centerX) * 6;
+
+            card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.02)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateY(0) scale(1)';
+        });
+    });
+}
