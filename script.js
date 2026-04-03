@@ -31,6 +31,20 @@ fetch('playlist.php')
             musicaTxt.innerText = "Sem Músicas";
             cantorTxt.innerText = "Adicione MP3 na pasta";
         }
+        // Attempt autoplay
+        setTimeout(() => {
+            if (playlist.length > 0 && !tocando) {
+                player.play().then(() => {
+                    tocando = true;
+                    iconPlay.classList.replace('fa-play', 'fa-pause');
+                    equalizer.classList.remove('paused');
+                    vinyl.classList.add('spinning');
+                    updateOnAirBadge(true);
+                }).catch(() => {
+                    showAutoplayAlert();
+                });
+            }
+        }, 500);
     });
 
 // 2. Prepara Música e a Lista de Próximas
@@ -93,6 +107,27 @@ function updateOnAirBadge(playing) {
         if (dot) dot.style.display = 'none';
         if (ring) ring.style.display = 'none';
     }
+}
+
+function showAutoplayAlert() {
+    if (document.getElementById('autoplay-overlay')) return;
+    const overlay = document.createElement('div');
+    overlay.id = 'autoplay-overlay';
+    overlay.innerHTML = `
+        <div class="autoplay-content">
+            <i class="fa-solid fa-tower-broadcast autoplay-icon"></i>
+            <h2>VaneKonex Rádio</h2>
+            <p>Toque para começar a ouvir</p>
+            <button id="autoplay-btn" class="btn-neon autoplay-btn">
+                <i class="fa-solid fa-play"></i> Ouvir Agora
+            </button>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+    document.getElementById('autoplay-btn').addEventListener('click', () => {
+        overlay.remove();
+        togglePlay();
+    });
 }
 
 function togglePlay() {
@@ -720,12 +755,39 @@ function initSmokeEffect() {
     }
 
     // Create initial puffs
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 15; i++) {
         setTimeout(() => createSmokePuff(), i * 600);
     }
 
     // Keep generating
-    setInterval(createSmokePuff, 1200);
+    setInterval(createSmokePuff, 700);
+
+    // Also create smoke at the top
+    const containerTop = document.getElementById('smoke-container-top');
+    if (containerTop) {
+        function createSmokePuffTop() {
+            const puff = document.createElement('div');
+            puff.classList.add('smoke-puff', 'smoke-puff-top');
+            const size = 80 + Math.random() * 150;
+            puff.style.width = size + 'px';
+            puff.style.height = size + 'px';
+            puff.style.left = Math.random() * 100 + '%';
+            puff.style.animationDuration = (8 + Math.random() * 8) + 's';
+            puff.style.animationDelay = (Math.random() * 3) + 's';
+            const rand = Math.random();
+            if (rand > 0.5) {
+                puff.style.background = 'radial-gradient(circle, rgba(255,0,127,0.06) 0%, rgba(0,243,255,0.03) 40%, transparent 70%)';
+            } else {
+                puff.style.background = 'radial-gradient(circle, rgba(108,92,231,0.05) 0%, rgba(0,243,255,0.03) 40%, transparent 70%)';
+            }
+            containerTop.appendChild(puff);
+            puff.addEventListener('animationend', () => puff.remove());
+        }
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => createSmokePuffTop(), i * 800);
+        }
+        setInterval(createSmokePuffTop, 900);
+    }
 }
 
 // =============================================
@@ -894,8 +956,8 @@ function checkVDJStream() {
 
 function setVDJOffline(dot, text, liveText, liveIndicator) {
     if (dot) { dot.classList.remove('live'); }
-    if (text) { text.classList.remove('live'); text.textContent = 'OFFLINE'; }
-    if (liveText) { liveText.textContent = 'OFFLINE'; }
+    if (text) { text.classList.remove('live'); text.textContent = 'ONLINE'; }
+    if (liveText) { liveText.textContent = 'ONLINE'; }
     if (liveIndicator) {
         const liveDot = liveIndicator.querySelector('.live-dot');
         if (liveDot) liveDot.style.background = '';
