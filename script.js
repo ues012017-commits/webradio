@@ -76,6 +76,25 @@ function atualizarListaProximas() {
 }
 
 // 4. Controle de Play / Pause
+function updateOnAirBadge(playing) {
+    const badge = document.getElementById('now-playing-badge');
+    const dot = document.getElementById('player-live-dot');
+    const text = document.getElementById('player-live-text');
+    const ring = document.getElementById('player-pulse-ring');
+    if (!badge) return;
+    if (playing) {
+        badge.classList.remove('standby');
+        if (text) text.textContent = 'AO VIVO';
+        if (dot) dot.style.display = 'inline-block';
+        if (ring) ring.style.display = 'block';
+    } else {
+        badge.classList.add('standby');
+        if (text) text.textContent = 'AGUARDANDO';
+        if (dot) dot.style.display = 'none';
+        if (ring) ring.style.display = 'none';
+    }
+}
+
 function togglePlay() {
     if (playlist.length === 0) return;
 
@@ -85,12 +104,14 @@ function togglePlay() {
         equalizer.classList.add('paused');
         vinyl.classList.remove('spinning'); // Pára o vinil
         tocando = false;
+        updateOnAirBadge(false);
     } else {
         player.play();
         iconPlay.classList.replace('fa-play', 'fa-pause');
         equalizer.classList.remove('paused');
         vinyl.classList.add('spinning'); // Roda o vinil
         tocando = true;
+        updateOnAirBadge(true);
     }
 }
 
@@ -220,7 +241,7 @@ function createParticles() {
     const container = document.getElementById('particles');
     if (!container) return;
 
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 20; i++) {
         const particle = document.createElement('div');
         particle.classList.add('particle');
         particle.style.left = Math.random() * 100 + '%';
@@ -459,6 +480,7 @@ function initSmoothScroll() {
 
 // Initialize all new features
 document.addEventListener('DOMContentLoaded', () => {
+    updateOnAirBadge(false);
     initScrollReveal();
     animateCounters();
     initTypedText();
@@ -474,7 +496,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initListenerCounter();
     initTiltCards();
     initSmokeEffect();
-    initDancer();
 });
 
 // =============================================
@@ -501,7 +522,7 @@ function initCursorGlow() {
 // =============================================
 // AUDIO VISUALIZER (Web Audio API)
 // =============================================
-// Shared audio analysis state (used by visualizer + dancer)
+// Shared audio analysis state (used by visualizer)
 let sharedAudioContext = null;
 let sharedAnalyser = null;
 let sharedDataArray = null;
@@ -687,130 +708,4 @@ function initSmokeEffect() {
 
     // Keep generating
     setInterval(createSmokePuff, 1200);
-}
-
-// =============================================
-// DANCING FIGURE (reacts to audio)
-// =============================================
-function initDancer() {
-    const svg = document.getElementById('dancer-svg');
-    if (!svg) return;
-
-    const armLeft = document.getElementById('dancer-arm-left');
-    const armRight = document.getElementById('dancer-arm-right');
-    const legLeft = document.getElementById('dancer-leg-left');
-    const legRight = document.getElementById('dancer-leg-right');
-    const head = svg.querySelector('.dancer-head');
-    const body = svg.querySelector('.dancer-body');
-
-    if (!armLeft || !armRight || !legLeft || !legRight) return;
-
-    // Start with idle CSS animation
-    svg.classList.add('idle');
-
-    function animateDancer() {
-        requestAnimationFrame(animateDancer);
-
-        // Get audio energy
-        let bass = 0;
-        let mid = 0;
-        let high = 0;
-        let energy = 0;
-
-        if (sharedAudioConnected && sharedAnalyser && sharedDataArray && tocando) {
-            sharedAnalyser.getByteFrequencyData(sharedDataArray);
-
-            // Bass (low frequencies)
-            const bassEnd = Math.floor(sharedDataArray.length * 0.15);
-            for (let i = 0; i < bassEnd; i++) {
-                bass += sharedDataArray[i];
-            }
-            bass = bass / (bassEnd * 255);
-
-            // Mid frequencies
-            const midStart = Math.floor(sharedDataArray.length * 0.15);
-            const midEnd = Math.floor(sharedDataArray.length * 0.5);
-            for (let i = midStart; i < midEnd; i++) {
-                mid += sharedDataArray[i];
-            }
-            mid = mid / ((midEnd - midStart) * 255);
-
-            // High frequencies
-            const highStart = Math.floor(sharedDataArray.length * 0.5);
-            for (let i = highStart; i < sharedDataArray.length; i++) {
-                high += sharedDataArray[i];
-            }
-            high = high / ((sharedDataArray.length - highStart) * 255);
-
-            energy = (bass + mid + high) / 3;
-
-            // Remove idle CSS animations when reacting to audio
-            svg.classList.remove('idle');
-        } else if (tocando) {
-            // Fallback: simulate energy with sine wave
-            const t = Date.now() / 1000;
-            bass = 0.3 + Math.sin(t * 3) * 0.2;
-            mid = 0.3 + Math.sin(t * 4 + 1) * 0.2;
-            high = 0.2 + Math.sin(t * 5 + 2) * 0.15;
-            energy = (bass + mid + high) / 3;
-            svg.classList.remove('idle');
-        } else {
-            // Not playing - use idle CSS animations
-            svg.classList.add('idle');
-            return;
-        }
-
-        // Dancer moves based on audio
-        const t = Date.now() / 1000;
-
-        // Arms react to mid/high frequencies
-        const armAngleL = -30 - mid * 120 + Math.sin(t * 6) * high * 40;
-        const armAngleR = 30 + mid * 120 - Math.sin(t * 6 + Math.PI) * high * 40;
-        const armEndLeftX = 100 + Math.cos(Math.PI / 2 + (armAngleL * Math.PI / 180)) * 60;
-        const armEndLeftY = 90 + Math.sin(Math.PI / 2 + (armAngleL * Math.PI / 180)) * 60;
-        const armEndRightX = 100 + Math.cos(Math.PI / 2 - (armAngleR * Math.PI / 180)) * 60;
-        const armEndRightY = 90 + Math.sin(Math.PI / 2 - (armAngleR * Math.PI / 180)) * 60;
-
-        armLeft.setAttribute('x2', armEndLeftX);
-        armLeft.setAttribute('y2', armEndLeftY);
-        armRight.setAttribute('x2', armEndRightX);
-        armRight.setAttribute('y2', armEndRightY);
-
-        // Legs react to bass (dance steps)
-        const legSwing = bass * 35 + 10;
-        const legPhase = Math.sin(t * 4 + bass * 2);
-        const legLeftX = 100 - 35 + legPhase * legSwing;
-        const legRightX = 100 + 35 - legPhase * legSwing;
-        const legLeftY = 250 - bass * 20;
-        const legRightY = 250 - bass * 10;
-
-        legLeft.setAttribute('x2', legLeftX);
-        legLeft.setAttribute('y2', legLeftY);
-        legRight.setAttribute('x2', legRightX);
-        legRight.setAttribute('y2', legRightY);
-
-        // Body bounces with bass
-        const bodyBounce = bass * 12;
-        body.setAttribute('y1', 60 - bodyBounce);
-        body.setAttribute('y2', 160 - bodyBounce);
-        armLeft.setAttribute('y1', 90 - bodyBounce);
-        armRight.setAttribute('y1', 90 - bodyBounce);
-        legLeft.setAttribute('y1', 160 - bodyBounce);
-        legRight.setAttribute('y1', 160 - bodyBounce);
-
-        // Head bobbing
-        const headBob = Math.sin(t * 5) * high * 8;
-        const headBounce = bass * 12;
-        head.setAttribute('cx', 100 + headBob);
-        head.setAttribute('cy', 40 - headBounce);
-
-        // Floor glow intensity
-        const floorGlow = svg.parentElement.querySelector('.dancer-floor-glow');
-        if (floorGlow) {
-            const glowOpacity = 0.3 + energy * 0.7;
-            floorGlow.style.opacity = glowOpacity;
-        }
-    }
-
-    animateDancer();
 }

@@ -34,6 +34,7 @@
             <a href="#player-section">Player</a>
             <a href="#programacao">Programação</a>
             <a href="#agentes">Agentes IA</a>
+            <a href="#artistas">Artistas</a>
             <a href="#noticias">Notícias</a>
             <a href="#parceiros">Parceiros</a>
             <a href="#contato">Contato</a>
@@ -92,9 +93,10 @@
 
     <main class="main-container">
         <section id="player-section" class="glass-panel scroll-reveal">
-            <div class="now-playing-badge">
-                <span class="live-dot-sm"></span> AO VIVO
-                <span class="online-pulse-ring"></span>
+            <div class="now-playing-badge" id="now-playing-badge">
+                <span class="live-dot-sm" id="player-live-dot"></span>
+                <span id="player-live-text">AGUARDANDO</span>
+                <span class="online-pulse-ring" id="player-pulse-ring"></span>
             </div>
             
             <!-- Audio Visualizer Canvas -->
@@ -560,7 +562,119 @@
         </div>
     </section>
 
-    <!-- Parceiros - Grid com logos fake -->
+    <!-- Artistas em Destaque -->
+    <section id="artistas" class="section-full scroll-reveal">
+        <div class="section-header">
+            <h2><i class="fa-solid fa-star"></i> Artistas em Destaque</h2>
+            <p>Os artistas que estão fazendo sucesso na VaneKonex</p>
+        </div>
+        <div class="artistas-grid">
+            <div class="artista-card">
+                <div class="artista-img-wrap">
+                    <img src="https://placehold.co/300x300/1a1a2e/00f3ff?text=🎤&font=poppins" alt="Artista 1" loading="lazy">
+                    <div class="artista-overlay">
+                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <span class="artista-genre-badge">Sertanejo</span>
+                </div>
+                <div class="artista-info">
+                    <h4>Luan Santana</h4>
+                    <p>Sertanejo &amp; Pop</p>
+                    <div class="artista-meta">
+                        <span><i class="fa-solid fa-music"></i> 42 músicas</span>
+                        <span><i class="fa-solid fa-heart"></i> 18.4k</span>
+                    </div>
+                </div>
+            </div>
+            <div class="artista-card">
+                <div class="artista-img-wrap">
+                    <img src="https://placehold.co/300x300/1a1a2e/ff007f?text=🎸&font=poppins" alt="Artista 2" loading="lazy">
+                    <div class="artista-overlay">
+                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <span class="artista-genre-badge" style="background: var(--neon-magenta)">Rock</span>
+                </div>
+                <div class="artista-info">
+                    <h4>Capital Inicial</h4>
+                    <p>Rock Nacional</p>
+                    <div class="artista-meta">
+                        <span><i class="fa-solid fa-music"></i> 35 músicas</span>
+                        <span><i class="fa-solid fa-heart"></i> 12.1k</span>
+                    </div>
+                </div>
+            </div>
+            <div class="artista-card">
+                <div class="artista-img-wrap">
+                    <img src="https://placehold.co/300x300/1a1a2e/ffe66d?text=🎶&font=poppins" alt="Artista 3" loading="lazy">
+                    <div class="artista-overlay">
+                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <span class="artista-genre-badge" style="background: #e8b800">MPB</span>
+                </div>
+                <div class="artista-info">
+                    <h4>Marisa Monte</h4>
+                    <p>MPB &amp; Axé</p>
+                    <div class="artista-meta">
+                        <span><i class="fa-solid fa-music"></i> 58 músicas</span>
+                        <span><i class="fa-solid fa-heart"></i> 22.7k</span>
+                    </div>
+                </div>
+            </div>
+            <div class="artista-card">
+                <div class="artista-img-wrap">
+                    <img src="https://placehold.co/300x300/1a1a2e/a29bfe?text=🎧&font=poppins" alt="Artista 4" loading="lazy">
+                    <div class="artista-overlay">
+                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <span class="artista-genre-badge" style="background: #6c5ce7">Eletrônica</span>
+                </div>
+                <div class="artista-info">
+                    <h4>DJ Alok</h4>
+                    <p>Eletrônica &amp; Dance</p>
+                    <div class="artista-meta">
+                        <span><i class="fa-solid fa-music"></i> 67 músicas</span>
+                        <span><i class="fa-solid fa-heart"></i> 31.2k</span>
+                    </div>
+                </div>
+            </div>
+            <div class="artista-card">
+                <div class="artista-img-wrap">
+                    <img src="https://placehold.co/300x300/1a1a2e/4ecdc4?text=🎺&font=poppins" alt="Artista 5" loading="lazy">
+                    <div class="artista-overlay">
+                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <span class="artista-genre-badge" style="background: #00b894">Forró</span>
+                </div>
+                <div class="artista-info">
+                    <h4>Wesley Safadão</h4>
+                    <p>Forró &amp; Piseiro</p>
+                    <div class="artista-meta">
+                        <span><i class="fa-solid fa-music"></i> 53 músicas</span>
+                        <span><i class="fa-solid fa-heart"></i> 27.9k</span>
+                    </div>
+                </div>
+            </div>
+            <div class="artista-card">
+                <div class="artista-img-wrap">
+                    <img src="https://placehold.co/300x300/1a1a2e/e17055?text=🎵&font=poppins" alt="Artista 6" loading="lazy">
+                    <div class="artista-overlay">
+                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
+                    </div>
+                    <span class="artista-genre-badge" style="background: #e17055">Funk</span>
+                </div>
+                <div class="artista-info">
+                    <h4>Anitta</h4>
+                    <p>Pop &amp; Funk</p>
+                    <div class="artista-meta">
+                        <span><i class="fa-solid fa-music"></i> 79 músicas</span>
+                        <span><i class="fa-solid fa-heart"></i> 45.6k</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parceiros - Grid estático com logos -->
     <section id="parceiros" class="section-full scroll-reveal">
         <div class="section-header">
             <h2><i class="fa-solid fa-handshake"></i> Nossos Parceiros</h2>
@@ -826,53 +940,6 @@
 
     <!-- Smoke/Fog Effect -->
     <div class="smoke-container" id="smoke-container"></div>
-
-    <!-- Dancing Figure (reacts to music) -->
-    <div class="dancer-container" id="dancer-container">
-        <svg class="dancer-svg" id="dancer-svg" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg">
-            <!-- Head -->
-            <circle class="dancer-head" cx="100" cy="40" r="20" fill="none" stroke="url(#dancerGrad)" stroke-width="2"/>
-            <!-- Body -->
-            <line class="dancer-body" x1="100" y1="60" x2="100" y2="160" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- Left Arm -->
-            <line class="dancer-arm-left" id="dancer-arm-left" x1="100" y1="90" x2="50" y2="130" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- Right Arm -->
-            <line class="dancer-arm-right" id="dancer-arm-right" x1="100" y1="90" x2="150" y2="130" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- Left Leg -->
-            <line class="dancer-leg-left" id="dancer-leg-left" x1="100" y1="160" x2="65" y2="250" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- Right Leg -->
-            <line class="dancer-leg-right" id="dancer-leg-right" x1="100" y1="160" x2="135" y2="250" stroke="url(#dancerGrad)" stroke-width="2.5" stroke-linecap="round"/>
-            <!-- Glow filter -->
-            <defs>
-                <linearGradient id="dancerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stop-color="var(--neon-cyan)"/>
-                    <stop offset="100%" stop-color="var(--neon-magenta)"/>
-                </linearGradient>
-                <filter id="dancerGlow">
-                    <feGaussianBlur stdDeviation="3" result="glow"/>
-                    <feMerge>
-                        <feMergeNode in="glow"/>
-                        <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                </filter>
-            </defs>
-        </svg>
-        <div class="dancer-floor-glow"></div>
-    </div>
-
-    <!-- Owner Banner -->
-    <div class="owner-banner" id="owner-banner">
-        <div class="owner-banner-content">
-            <div class="owner-avatar">
-                <i class="fa-solid fa-crown"></i>
-            </div>
-            <div class="owner-info">
-                <span class="owner-label"><i class="fa-solid fa-star"></i> Fundadora &amp; CEO</span>
-                <h3 class="owner-name">Vanessa Corrêa</h3>
-                <p class="owner-tagline">Dona da Rádio VaneKonex</p>
-            </div>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>
