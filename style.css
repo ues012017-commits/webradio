@@ -38,6 +38,8 @@ body {
 .orb-1 { width: 400px; height: 400px; background: var(--neon-cyan); top: -100px; left: -100px; }
 .orb-2 { width: 500px; height: 500px; background: var(--neon-magenta); bottom: -150px; right: -100px; animation-duration: 20s; }
 .orb-3 { width: 300px; height: 300px; background: #6c5ce7; top: 50%; left: 50%; transform: translate(-50%, -50%); animation-duration: 25s; opacity: 0.2; }
+.orb-4 { width: 350px; height: 350px; background: #00b894; top: 20%; right: -80px; animation-duration: 22s; opacity: 0.15; }
+.orb-5 { width: 280px; height: 280px; background: #e17055; bottom: 20%; left: 30%; animation-duration: 28s; opacity: 0.12; }
 
 @keyframes float {
     0% { transform: translate(0, 0) scale(1); }
@@ -1562,6 +1564,88 @@ footer {
     }
 }
 
+/* Top Smoke Container */
+.smoke-top {
+    bottom: auto;
+    top: 0;
+    height: 220px;
+}
+.smoke-puff-top {
+    position: absolute;
+    top: -40px;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0;
+    animation: smokeDown 10s ease-out infinite;
+}
+@keyframes smokeDown {
+    0% { opacity: 0; transform: translateY(0) scale(0.5); }
+    15% { opacity: 0.4; }
+    50% { opacity: 0.2; }
+    100% { opacity: 0; transform: translateY(220px) scale(3); }
+}
+
+/* Autoplay Overlay */
+#autoplay-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(8, 9, 13, 0.95);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.5s ease;
+}
+.autoplay-content {
+    text-align: center;
+    padding: 40px;
+}
+.autoplay-icon {
+    font-size: 4rem;
+    color: var(--neon-cyan);
+    margin-bottom: 20px;
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+.autoplay-content h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-magenta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.autoplay-content p {
+    color: #aaa;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+}
+.autoplay-btn {
+    font-size: 1.2rem;
+    padding: 16px 40px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--neon-magenta), var(--neon-cyan));
+    color: #fff;
+    font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.4), 0 0 60px rgba(255, 0, 127, 0.2);
+    transition: all 0.3s ease;
+    animation: autoplayPulse 2s ease-in-out infinite;
+}
+.autoplay-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 40px rgba(0, 243, 255, 0.6), 0 0 80px rgba(255, 0, 127, 0.3);
+}
+@keyframes autoplayPulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(0, 243, 255, 0.4), 0 0 60px rgba(255, 0, 127, 0.2); }
+    50% { box-shadow: 0 0 50px rgba(0, 243, 255, 0.6), 0 0 90px rgba(255, 0, 127, 0.4); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 
 /* =========================================
    LOCUTORA CARD
@@ -1681,25 +1765,31 @@ footer {
    VIRTUAL DJ STATUS
    ========================================= */
 .vdj-status {
-    padding: 18px 20px;
+    padding: 24px 24px;
+}
+.vdj-status-large {
+    padding: 28px 24px;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.1);
 }
 .vdj-status h3 {
-    font-size: 0.95rem;
-    margin-bottom: 12px;
+    font-size: 1.1rem;
+    margin-bottom: 14px;
 }
 .vdj-indicator {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 8px;
+    gap: 12px;
+    margin-bottom: 10px;
 }
 .vdj-dot {
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    background: #888;
-    box-shadow: 0 0 6px rgba(136, 136, 136, 0.4);
+    background: #2ecc71;
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.5);
     transition: all 0.4s ease;
+    animation: vdjDotPulse 1.5s ease-in-out infinite;
 }
 .vdj-dot.live {
     background: #2ecc71;
@@ -1711,10 +1801,10 @@ footer {
     50% { box-shadow: 0 0 18px rgba(46, 204, 113, 0.9), 0 0 30px rgba(46, 204, 113, 0.4); }
 }
 .vdj-text {
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 700;
-    letter-spacing: 1px;
-    color: #888;
+    letter-spacing: 1.5px;
+    color: #2ecc71;
     transition: color 0.4s ease;
 }
 .vdj-text.live {
