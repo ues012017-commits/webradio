@@ -749,6 +749,14 @@ function loadSiteConfig() {
 function applySiteConfig(cfg) {
     if (!cfg) return;
 
+    function isSafeUrl(url) {
+        if (!url || url === '#') return true;
+        try {
+            const parsed = new URL(url, window.location.origin);
+            return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+        } catch(e) { return false; }
+    }
+
     // Contact info
     const contatoItems = document.querySelectorAll('.contato-item');
     if (contatoItems.length >= 4) {
@@ -769,7 +777,8 @@ function applySiteConfig(cfg) {
     ];
     headerSocials.forEach((a, i) => {
         if (socialMap[i] && cfg[socialMap[i].key]) {
-            a.href = cfg[socialMap[i].key];
+            const url = cfg[socialMap[i].key];
+            if (isSafeUrl(url)) a.href = url;
         }
     });
 
@@ -778,7 +787,8 @@ function applySiteConfig(cfg) {
     const contatoSocialMap = ['instagram', 'facebook', 'youtube', 'twitter', 'tiktok'];
     contatoSocials.forEach((a, i) => {
         if (contatoSocialMap[i] && cfg[contatoSocialMap[i]]) {
-            a.href = cfg[contatoSocialMap[i]];
+            const url = cfg[contatoSocialMap[i]];
+            if (isSafeUrl(url)) a.href = url;
         }
     });
 
@@ -797,7 +807,8 @@ function applySiteConfig(cfg) {
     document.querySelectorAll('.locutora-social-link').forEach(a => {
         const key = a.getAttribute('data-social');
         if (key && locutoraSocials[key]) {
-            a.href = locutoraSocials[key];
+            const url = locutoraSocials[key];
+            if (isSafeUrl(url)) a.href = url;
         }
     });
 
@@ -813,11 +824,12 @@ function applySiteConfig(cfg) {
 // =============================================
 // VIRTUAL DJ STREAM CHECK
 // =============================================
+const VDJ_DEFAULT_INTERVAL = 30;
 let vdjCheckTimer = null;
 
 function initVirtualDJCheck() {
     checkVDJStream();
-    const interval = parseInt(localStorage.getItem('vdj_check_interval')) || 30;
+    const interval = parseInt(localStorage.getItem('vdj_check_interval')) || VDJ_DEFAULT_INTERVAL;
     vdjCheckTimer = setInterval(checkVDJStream, interval * 1000);
 }
 
@@ -829,23 +841,35 @@ function checkVDJStream() {
     const liveText = liveIndicator ? liveIndicator.querySelector('.live-text') : null;
 
     if (!streamUrl) {
-        setVDJOffline(vdjDot, vdjText);
+        setVDJOffline(vdjDot, vdjText, liveText, liveIndicator);
         return;
     }
 
-    fetch(streamUrl, { method: 'HEAD', mode: 'no-cors', cache: 'no-store' })
-        .then(() => {
-            if (vdjDot) { vdjDot.classList.add('live'); }
-            if (vdjText) { vdjText.classList.add('live'); vdjText.textContent = 'AO VIVO'; }
-            if (liveText) { liveText.textContent = 'AO VIVO'; }
-            if (liveIndicator) { liveIndicator.querySelector('.live-dot').style.background = '#2ecc71'; }
+    fetch(streamUrl, { method: 'HEAD', cache: 'no-store' })
+        .then(response => {
+            if (response.ok || response.type === 'opaque') {
+                if (vdjDot) { vdjDot.classList.add('live'); }
+                if (vdjText) { vdjText.classList.add('live'); vdjText.textContent = 'AO VIVO'; }
+                if (liveText) { liveText.textContent = 'AO VIVO'; }
+                if (liveIndicator) {
+                    const dot = liveIndicator.querySelector('.live-dot');
+                    if (dot) dot.style.background = '#2ecc71';
+                }
+            } else {
+                setVDJOffline(vdjDot, vdjText, liveText, liveIndicator);
+            }
         })
         .catch(() => {
-            setVDJOffline(vdjDot, vdjText);
+            setVDJOffline(vdjDot, vdjText, liveText, liveIndicator);
         });
 }
 
-function setVDJOffline(dot, text) {
+function setVDJOffline(dot, text, liveText, liveIndicator) {
     if (dot) { dot.classList.remove('live'); }
     if (text) { text.classList.remove('live'); text.textContent = 'OFFLINE'; }
+    if (liveText) { liveText.textContent = 'OFFLINE'; }
+    if (liveIndicator) {
+        const liveDot = liveIndicator.querySelector('.live-dot');
+        if (liveDot) liveDot.style.background = '';
+    }
 }

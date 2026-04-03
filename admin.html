@@ -586,7 +586,6 @@
     <div class="toast" id="toast"></div>
 
     <script>
-    // SHA-256 hash of "konex 2026"
     const ADMIN_HASH = 'f38fcb4e32e6286fa6f924223e3ed4fe250cbf2c2d30023691f0867710b5cfbb';
     let currentPassword = '';
     let currentConfig = {};
@@ -706,8 +705,10 @@
     }
 
     // Color preview live update
-    document.getElementById('cfg-cor-primaria').addEventListener('input', updateColorPreviews);
-    document.getElementById('cfg-cor-secundaria').addEventListener('input', updateColorPreviews);
+    const corPrimariaEl = document.getElementById('cfg-cor-primaria');
+    const corSecundariaEl = document.getElementById('cfg-cor-secundaria');
+    if (corPrimariaEl) corPrimariaEl.addEventListener('input', updateColorPreviews);
+    if (corSecundariaEl) corSecundariaEl.addEventListener('input', updateColorPreviews);
 
     // Schedule
     function populateSchedule(items) {
