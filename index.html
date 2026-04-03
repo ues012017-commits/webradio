@@ -34,7 +34,6 @@
             <a href="#player-section">Player</a>
             <a href="#programacao">Programação</a>
             <a href="#agentes">Agentes IA</a>
-            <a href="#artistas">Artistas</a>
             <a href="#noticias">Notícias</a>
             <a href="#parceiros">Parceiros</a>
             <a href="#contato">Contato</a>
@@ -149,6 +148,37 @@
                 <ul id="lista-proximas">
                     <li>Carregando playlist...</li>
                 </ul>
+            </section>
+
+            <!-- Locutora Vanessa Corrêa -->
+            <section class="glass-panel locutora-card scroll-reveal">
+                <div class="locutora-avatar-wrap">
+                    <div class="locutora-avatar" id="locutora-avatar">
+                        <img src="https://placehold.co/150x150/1a1a2e/00f3ff?text=VC&font=poppins" alt="Vanessa Corrêa" id="locutora-photo">
+                        <div class="locutora-pulse-ring"></div>
+                    </div>
+                </div>
+                <div class="locutora-info">
+                    <h3 id="locutora-name">Vanessa Corrêa</h3>
+                    <span class="locutora-title">Locutora</span>
+                    <span class="locutora-badge" id="locutora-badge"><i class="fa-solid fa-broadcast-tower"></i> NO AR</span>
+                </div>
+                <div class="locutora-socials">
+                    <a href="#" aria-label="Instagram" class="locutora-social-link" data-social="locutora-instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" aria-label="Facebook" class="locutora-social-link" data-social="locutora-facebook"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" aria-label="Twitter" class="locutora-social-link" data-social="locutora-twitter"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" aria-label="TikTok" class="locutora-social-link" data-social="locutora-tiktok"><i class="fa-brands fa-tiktok"></i></a>
+                </div>
+            </section>
+
+            <!-- Virtual DJ Status -->
+            <section class="glass-panel vdj-status scroll-reveal">
+                <h3><i class="fa-solid fa-headset"></i> Virtual DJ</h3>
+                <div class="vdj-indicator">
+                    <span class="vdj-dot" id="vdj-dot"></span>
+                    <span class="vdj-text" id="vdj-text">OFFLINE</span>
+                </div>
+                <p class="vdj-config-info">Streaming via Virtual DJ</p>
             </section>
 
             <section class="glass-panel news-mini scroll-reveal">
@@ -557,118 +587,6 @@
                 <div class="galeria-overlay">
                     <i class="fa-solid fa-expand"></i>
                     <span>DJ em Ação</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Artistas em Destaque -->
-    <section id="artistas" class="section-full scroll-reveal">
-        <div class="section-header">
-            <h2><i class="fa-solid fa-star"></i> Artistas em Destaque</h2>
-            <p>Os artistas que estão fazendo sucesso na VaneKonex</p>
-        </div>
-        <div class="artistas-grid">
-            <div class="artista-card">
-                <div class="artista-img-wrap">
-                    <img src="https://placehold.co/300x300/1a1a2e/00f3ff?text=🎤&font=poppins" alt="Artista 1" loading="lazy">
-                    <div class="artista-overlay">
-                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
-                    </div>
-                    <span class="artista-genre-badge">Sertanejo</span>
-                </div>
-                <div class="artista-info">
-                    <h4>Luan Santana</h4>
-                    <p>Sertanejo &amp; Pop</p>
-                    <div class="artista-meta">
-                        <span><i class="fa-solid fa-music"></i> 42 músicas</span>
-                        <span><i class="fa-solid fa-heart"></i> 18.4k</span>
-                    </div>
-                </div>
-            </div>
-            <div class="artista-card">
-                <div class="artista-img-wrap">
-                    <img src="https://placehold.co/300x300/1a1a2e/ff007f?text=🎸&font=poppins" alt="Artista 2" loading="lazy">
-                    <div class="artista-overlay">
-                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
-                    </div>
-                    <span class="artista-genre-badge" style="background: var(--neon-magenta)">Rock</span>
-                </div>
-                <div class="artista-info">
-                    <h4>Capital Inicial</h4>
-                    <p>Rock Nacional</p>
-                    <div class="artista-meta">
-                        <span><i class="fa-solid fa-music"></i> 35 músicas</span>
-                        <span><i class="fa-solid fa-heart"></i> 12.1k</span>
-                    </div>
-                </div>
-            </div>
-            <div class="artista-card">
-                <div class="artista-img-wrap">
-                    <img src="https://placehold.co/300x300/1a1a2e/ffe66d?text=🎶&font=poppins" alt="Artista 3" loading="lazy">
-                    <div class="artista-overlay">
-                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
-                    </div>
-                    <span class="artista-genre-badge" style="background: #e8b800">MPB</span>
-                </div>
-                <div class="artista-info">
-                    <h4>Marisa Monte</h4>
-                    <p>MPB &amp; Axé</p>
-                    <div class="artista-meta">
-                        <span><i class="fa-solid fa-music"></i> 58 músicas</span>
-                        <span><i class="fa-solid fa-heart"></i> 22.7k</span>
-                    </div>
-                </div>
-            </div>
-            <div class="artista-card">
-                <div class="artista-img-wrap">
-                    <img src="https://placehold.co/300x300/1a1a2e/a29bfe?text=🎧&font=poppins" alt="Artista 4" loading="lazy">
-                    <div class="artista-overlay">
-                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
-                    </div>
-                    <span class="artista-genre-badge" style="background: #6c5ce7">Eletrônica</span>
-                </div>
-                <div class="artista-info">
-                    <h4>DJ Alok</h4>
-                    <p>Eletrônica &amp; Dance</p>
-                    <div class="artista-meta">
-                        <span><i class="fa-solid fa-music"></i> 67 músicas</span>
-                        <span><i class="fa-solid fa-heart"></i> 31.2k</span>
-                    </div>
-                </div>
-            </div>
-            <div class="artista-card">
-                <div class="artista-img-wrap">
-                    <img src="https://placehold.co/300x300/1a1a2e/4ecdc4?text=🎺&font=poppins" alt="Artista 5" loading="lazy">
-                    <div class="artista-overlay">
-                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
-                    </div>
-                    <span class="artista-genre-badge" style="background: #00b894">Forró</span>
-                </div>
-                <div class="artista-info">
-                    <h4>Wesley Safadão</h4>
-                    <p>Forró &amp; Piseiro</p>
-                    <div class="artista-meta">
-                        <span><i class="fa-solid fa-music"></i> 53 músicas</span>
-                        <span><i class="fa-solid fa-heart"></i> 27.9k</span>
-                    </div>
-                </div>
-            </div>
-            <div class="artista-card">
-                <div class="artista-img-wrap">
-                    <img src="https://placehold.co/300x300/1a1a2e/e17055?text=🎵&font=poppins" alt="Artista 6" loading="lazy">
-                    <div class="artista-overlay">
-                        <button class="artista-play-btn"><i class="fa-solid fa-play"></i></button>
-                    </div>
-                    <span class="artista-genre-badge" style="background: #e17055">Funk</span>
-                </div>
-                <div class="artista-info">
-                    <h4>Anitta</h4>
-                    <p>Pop &amp; Funk</p>
-                    <div class="artista-meta">
-                        <span><i class="fa-solid fa-music"></i> 79 músicas</span>
-                        <span><i class="fa-solid fa-heart"></i> 45.6k</span>
-                    </div>
                 </div>
             </div>
         </div>

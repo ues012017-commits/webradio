@@ -1564,107 +1564,165 @@ footer {
 
 
 /* =========================================
-   ARTISTAS EM DESTAQUE
+   LOCUTORA CARD
    ========================================= */
-.artistas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 28px;
+.locutora-card {
+    text-align: center;
+    padding: 28px 20px;
 }
-.artista-card {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 18px;
-    overflow: hidden;
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
-    backdrop-filter: blur(10px);
+.locutora-avatar-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
 }
-.artista-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 40px rgba(0, 243, 255, 0.18);
-}
-.artista-img-wrap {
+.locutora-avatar {
     position: relative;
-    overflow: hidden;
-    aspect-ratio: 1 / 1;
-}
-.artista-img-wrap img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
-}
-.artista-card:hover .artista-img-wrap img {
-    transform: scale(1.06);
-}
-.artista-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: visible;
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
 }
-.artista-card:hover .artista-overlay {
-    opacity: 1;
-}
-.artista-play-btn {
-    background: linear-gradient(135deg, var(--neon-magenta), var(--neon-cyan));
-    border: none;
+.locutora-avatar img {
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
-    width: 54px;
-    height: 54px;
-    font-size: 1.2rem;
-    color: #fff;
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(0,243,255,0.4);
-    transition: transform 0.2s ease;
+    object-fit: cover;
+    border: 3px solid var(--neon-cyan);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.4), 0 0 40px rgba(0, 243, 255, 0.15);
+    animation: locutoraGlow 3s ease-in-out infinite;
+    position: relative;
+    z-index: 2;
 }
-.artista-play-btn:hover {
-    transform: scale(1.12);
-}
-.artista-genre-badge {
+.locutora-pulse-ring {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    background: var(--neon-cyan);
-    color: #000;
-    font-size: 0.65rem;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--neon-cyan);
+    opacity: 0;
+    animation: locutoraPulse 2.5s ease-out infinite;
+    z-index: 1;
+}
+@keyframes locutoraGlow {
+    0%, 100% { box-shadow: 0 0 20px rgba(0, 243, 255, 0.4), 0 0 40px rgba(0, 243, 255, 0.15); }
+    50% { box-shadow: 0 0 30px rgba(0, 243, 255, 0.6), 0 0 60px rgba(255, 0, 127, 0.2); }
+}
+@keyframes locutoraPulse {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.4); opacity: 0; }
+}
+.locutora-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+.locutora-info h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+}
+.locutora-title {
+    font-size: 0.78rem;
+    color: var(--neon-cyan);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+}
+.locutora-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, #e74c3c, #ff007f);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    animation: badgePulse 2s ease-in-out infinite;
+    box-shadow: 0 0 12px rgba(231, 76, 60, 0.5);
+}
+@keyframes badgePulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(231, 76, 60, 0.5); }
+    50% { box-shadow: 0 0 22px rgba(231, 76, 60, 0.8), 0 0 40px rgba(255, 0, 127, 0.3); }
+}
+.locutora-socials {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+.locutora-social-link {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--glass-border);
+    color: #ccc;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+.locutora-social-link:hover {
+    color: var(--neon-cyan);
+    background: rgba(0, 243, 255, 0.1);
+    box-shadow: 0 0 12px rgba(0, 243, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   VIRTUAL DJ STATUS
+   ========================================= */
+.vdj-status {
+    padding: 18px 20px;
+}
+.vdj-status h3 {
+    font-size: 0.95rem;
+    margin-bottom: 12px;
+}
+.vdj-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+.vdj-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #888;
+    box-shadow: 0 0 6px rgba(136, 136, 136, 0.4);
+    transition: all 0.4s ease;
+}
+.vdj-dot.live {
+    background: #2ecc71;
+    box-shadow: 0 0 10px rgba(46, 204, 113, 0.6), 0 0 20px rgba(46, 204, 113, 0.3);
+    animation: vdjDotPulse 1.5s ease-in-out infinite;
+}
+@keyframes vdjDotPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(46, 204, 113, 0.6); }
+    50% { box-shadow: 0 0 18px rgba(46, 204, 113, 0.9), 0 0 30px rgba(46, 204, 113, 0.4); }
+}
+.vdj-text {
+    font-size: 0.85rem;
     font-weight: 700;
     letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 20px;
-}
-.artista-info {
-    padding: 16px 18px;
-}
-.artista-info h4 {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 3px;
-}
-.artista-info > p {
-    font-size: 0.8rem;
     color: #888;
-    margin-bottom: 10px;
+    transition: color 0.4s ease;
 }
-.artista-meta {
-    display: flex;
-    gap: 14px;
-    font-size: 0.75rem;
-    color: #aaa;
+.vdj-text.live {
+    color: #2ecc71;
 }
-.artista-meta i {
-    color: var(--neon-cyan);
-    margin-right: 3px;
-}
-@media (max-width: 600px) {
-    .artistas-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.vdj-config-info {
+    font-size: 0.72rem;
+    color: #666;
 }
 @media (max-width: 900px) {
     .smoke-container { height: 120px; }
