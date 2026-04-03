@@ -531,9 +531,11 @@ function initAudioVisualizer() {
     }
 
     function resizeCanvas() {
-        canvas.width = canvas.offsetWidth * (window.devicePixelRatio || 1);
-        canvas.height = canvas.offsetHeight * (window.devicePixelRatio || 1);
-        ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(ratio, ratio);
     }
 
     resizeCanvas();
@@ -607,7 +609,9 @@ function initListenerCounter() {
     const counterEl = document.getElementById('listener-count');
     if (!counterEl) return;
 
-    let baseCount = 1247;
+    // Starting listener count (simulated for demo purposes)
+    const INITIAL_LISTENER_COUNT = 1247;
+    let baseCount = INITIAL_LISTENER_COUNT;
 
     setInterval(() => {
         const change = Math.floor(Math.random() * 11) - 4; // -4 to +6
