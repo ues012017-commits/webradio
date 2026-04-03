@@ -769,7 +769,11 @@
         const url = document.getElementById('cfg-logo-url').value;
         const preview = document.getElementById('logo-preview');
         if (url) {
-            preview.innerHTML = '<img src="' + escapeHtml(url) + '" alt="Logo">';
+            preview.innerHTML = '';
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = 'Logo';
+            preview.appendChild(img);
         } else {
             preview.innerHTML = '<i class="fa-solid fa-image" style="color:var(--text-dim);font-size:1.5rem"></i>';
         }

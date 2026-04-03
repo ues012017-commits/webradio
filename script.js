@@ -747,6 +747,14 @@ function escapeHtmlConfig(str) {
 }
 
 function applyStreamUrl(url) {
+    // Validate URL protocol
+    try {
+        const parsed = new URL(url);
+        if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return;
+    } catch (e) {
+        return;
+    }
+
     // Override the player to use stream instead of local files
     const audioPlayer = document.getElementById('audio-player');
     if (!audioPlayer) return;
@@ -781,7 +789,7 @@ function applyWhatsAppNumber(number) {
         const config = JSON.parse(localStorage.getItem('webradio_config') || '{}');
         const radioName = config.radioName || 'Web Rádio';
 
-        const whatsappMsg = '🎵 *Pedido Musical - ' + radioName + '*%0A%0A👤 Nome: ' + encodeURIComponent(nome) + '%0A🎶 Música: ' + encodeURIComponent(musica) + '%0A🎤 Artista: ' + encodeURIComponent(artista) + '%0A💬 Recado: ' + encodeURIComponent(msg);
+        const whatsappMsg = '🎵 *Pedido Musical - ' + encodeURIComponent(radioName) + '*%0A%0A👤 Nome: ' + encodeURIComponent(nome) + '%0A🎶 Música: ' + encodeURIComponent(musica) + '%0A🎤 Artista: ' + encodeURIComponent(artista) + '%0A💬 Recado: ' + encodeURIComponent(msg);
         window.open('https://wa.me/' + number + '?text=' + whatsappMsg, '_blank');
         this.reset();
     });
