@@ -501,9 +501,12 @@ function initCursorGlow() {
     // Only on desktop (no touch)
     if ('ontouchstart' in window) return;
 
+    const halfW = glow.offsetWidth / 2;
+    const halfH = glow.offsetHeight / 2;
+
     document.addEventListener('mousemove', (e) => {
         glow.classList.add('active');
-        glow.style.transform = 'translate(' + (e.clientX - 150) + 'px, ' + (e.clientY - 150) + 'px)';
+        glow.style.transform = 'translate(' + (e.clientX - halfW) + 'px, ' + (e.clientY - halfH) + 'px)';
     });
 
     document.addEventListener('mouseleave', () => {

@@ -974,8 +974,6 @@ footer {
 /* Cursor Glow Trail */
 .cursor-glow {
     position: fixed;
-    left: 0;
-    top: 0;
     width: 300px; height: 300px;
     background: radial-gradient(circle, rgba(0,243,255,0.08) 0%, transparent 70%);
     border-radius: 50%;
